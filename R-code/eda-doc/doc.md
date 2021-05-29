@@ -12,12 +12,15 @@ output:
     keep_tex: yes
     includes:
       in_header: "preamble.tex"
+bibliography: citation.bib
+csl: cn_gb.csl
 geometry: left=2cm, right=2cm, top=2.5cm, bottom=2.5cm
 monofont: Fira Mono
 ---
 
 # 环境
 
+## R info
 
 
 
@@ -43,6 +46,10 @@ Package version:
   dplyr_1.0.6      lubridate_1.7.10 purrr_0.3.4      readr_1.4.0     
   stringr_1.4.0    tidyr_1.1.3     
 ```
+
+## python info
+
+// TODO
 
 # 分析
 
@@ -146,14 +153,17 @@ df1 %>% write_csv(file = "./data/investment/FDI_OBOR.csv")
 
 ## Understand
 
+[@doi:10.1080/01621459.2021.1920957]
 // TODO... - R. Deng
+
 
 ## Communicate
 
-// Use echarts, maybe [**pyecharts**](https://github.com/pyecharts)?
+// Use **echarts**, maybe [**pyecharts**](https://github.com/pyecharts)?
 
 // TODO - H. Fan
 
 # 总结
 
+# 参考文献
 

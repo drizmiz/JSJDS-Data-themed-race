@@ -4,6 +4,8 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/eda-doc" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/eda-doc/doc_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/from_paper/online_supplements2/replication_package_final/RData" />
+      <excludeFolder url="file://$MODULE_DIR$/from_paper/online_supplements3/replication_package_final/RData" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (base)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

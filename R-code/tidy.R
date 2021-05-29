@@ -1,7 +1,12 @@
 # Created by: drizzle
 # Created on: 2021/5/29
 
-library(tidyverse)
+library(readr)
+library(tidyr)
+library(dplyr)
+
+library(stringr)
+library(purrr)
 
 raw_df <- read_csv("../data/investment/FDI_untidy.csv")
 
@@ -37,6 +42,6 @@ cont <- raw_df %>%
   .[. == "继续"] %>%
   names()
 raw_df %>%
-  select(c("X1", cont)) %>%
+  select(X1, all_of(cont)) %>%
   process() %>%
   write_csv("../data/investment/FDI_tidy_cont.csv")

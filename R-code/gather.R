@@ -1,7 +1,13 @@
 # Created by: drizzle
 # Created on: 2021/5/29
 
-library(tidyverse)
+library(readr)
+library(tidyr)
+library(dplyr)
+
+library(stringr)
+library(purrr)
+
 library(lubridate)
 
 raw_df <- read_csv(
@@ -35,7 +41,7 @@ df %>% write_csv(file = "../data/investment/FDI_useful.csv")
 
 df1 <- df0 %>%
   filter(国家 == "一带一路" & !is.na(.[OBOR_col])) %>%
-  select(c("时间", OBOR_col)) %>%
+  select(时间, all_of(OBOR_col)) %>%
   mutate(
     年份 = as.integer(year(时间)),
     月份 = as.integer(month(时间)),

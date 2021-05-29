@@ -1,29 +1,42 @@
-
 # Created by: drizzle
 # Created on: 2021/5/29
 
 library(tidyverse)
 
-raw_df <- read_csv("../data/FDI_untidy.csv")
+raw_df <- read_csv("../data/investment/FDI_untidy.csv")
 
-simplified_df <- raw_df %>%
-  filter(X1 %>% str_detect("^\\d")) %>%
-  rename(时间 = X1)
+process <- function(raw_df) {
+  simplified_df <- raw_df %>%
+    filter(X1 %>% str_detect("^\\d")) %>%
+    rename(时间 = X1)
 
-fliped_df <- simplified_df %>%
-  gather(key = "observation", value = "val", -时间)
+  fliped_df <- simplified_df %>%
+    pivot_longer(c(-时间), names_to = "observation", values_to = "val")
 
-stdize <- function (str) {
-  str %>%
-    str_replace(pattern = "(.*):(总计|一带一路)", replacement = "\\1/\\2/\\2") %>%
-    str_replace(pattern = "::", replacement = ":") %>%
-    str_replace(pattern = "(.*):(.*洲):*(.*)", replacement = "\\1/\\2/\\3")
+  stdize <- function(str) {
+    str %>%
+      str_replace(pattern = "(.*):(总计|一带一路)", replacement = "\\1/\\2/\\2") %>%
+      str_replace(pattern = "::", replacement = ":") %>%
+      str_replace(pattern = "(.*):(.*洲):*(.*)", replacement = "\\1/\\2/\\3")
+  }
+
+  sep_df <- fliped_df %>%
+    mutate(observation = observation %>% stdize()) %>%
+    separate(col = "observation", into = c("type", "地区", "国家"), sep = "/")
+
+  df <- sep_df %>% spread(key = "type", value = "val")
 }
 
-sep_df <- fliped_df %>%
-  mutate(observation = observation %>% stdize()) %>%
-  separate(col = "observation", into = c("type", "地区", "国家"), sep = "/")
+raw_df %>%
+  process() %>%
+  write_csv("../data/investment/FDI_tidy.csv")
 
-df <- sep_df %>% spread(key = "type", value = "val")
-
-df %>% write_csv("../data/FDI_tidy.csv")
+cont <- raw_df %>%
+  filter(X1 == "状态") %>%
+  as_vector() %>%
+  .[. == "继续"] %>%
+  names()
+raw_df %>%
+  select(c("X1", cont)) %>%
+  process() %>%
+  write_csv("../data/investment/FDI_tidy_cont.csv")

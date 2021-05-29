@@ -1,0 +1,28 @@
+---
+title: "说明"
+author: drizzle
+documentclass: ctexart
+output:
+  rticles::ctex:
+    fig_caption: yes
+    number_sections: yes
+    toc: no
+
+    keep_md: yes
+    keep_tex: yes
+geometry: left=2cm, right=2cm, top=2.5cm, bottom=2.5cm
+monofont: Fira Mono
+---
+
+// TODO
+
+```{r include = FALSE}
+library(tidyverse)
+library(lubridate)
+
+library(sessioninfo)
+```
+
+```{r}
+sessioninfo::session_info()
+```

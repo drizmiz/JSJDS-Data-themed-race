@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  30 MAY 2021 01:31
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  30 MAY 2021 02:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1045,24 +1045,24 @@ LaTeX Font Info:    Font shape `TU/FiraMono(0)/b/n' will be
 (Font)              scaled to size 8.60312pt on input line 139.
 Font mapping `tex-ansi.tec' for font `Fira Mono Medium' not found.
 LaTeX Font Info:    Font shape `TU/FandolFang-Regular(0)/m/n' will be
-(Font)              scaled to size 9.91795pt on input line 144.
+(Font)              scaled to size 9.91795pt on input line 148.
 [1
 
 ]
 File: workflow.png Graphic file (type bmp)
 <workflow.png>
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.52812pt on input line 183.
+(Font)              scaled to size 7.52812pt on input line 188.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 183.
+(Font)              scaled to size 5.0pt on input line 188.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.52881pt on input line 183.
+(Font)              scaled to size 7.52881pt on input line 188.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 183.
+(Font)              scaled to size 5.00046pt on input line 188.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.52731pt on input line 183.
+(Font)              scaled to size 7.52731pt on input line 188.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 183.
+(Font)              scaled to size 4.99947pt on input line 188.
 LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/m/sl' in size <10.5393
 7> not available
 (Font)              Font shape `TU/FandolSong-Regular(0)/m/it' tried instead on
@@ -1070,14 +1070,23 @@ LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/m/sl' in size <10.5393
 [2] [3]
 
 LaTeX Font Warning: Font shape `TU/FiraMono(0)/m/it' undefined
-(Font)              using `TU/FiraMono(0)/m/n' instead on input line 250.
+(Font)              using `TU/FiraMono(0)/m/n' instead on input line 255.
 
 
 LaTeX Font Warning: Font shape `TU/FandolFang-Regular(0)/m/it' undefined
 (Font)              using `TU/FandolFang-Regular(0)/m/n' instead on input line 
-250.
+255.
 
-[4] [5] (./doc.aux)
+
+Underfull \vbox (badness 10000) detected at line 284
+ []
+
+[4]
+File: /media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-cod
+e/eda-doc/doc_files/figure-latex/unnamed-chunk-5-1.pdf Graphic file (type pdf)
+<use /media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-code
+/eda-doc/doc_files/figure-latex/unnamed-chunk-5-1.pdf>
+[5] [6] (./doc.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -1085,12 +1094,12 @@ Package rerunfilecheck Info: File `doc.out' has not changed.
 (rerunfilecheck)             Checksum: DB86CC0AF7C008B5672B232DC3F7FAFB;963.
  ) 
 Here is how much of TeX's memory you used:
- 19620 strings out of 478682
- 384505 string characters out of 5862550
- 827559 words of memory out of 5000000
- 39390 multiletter control sequences out of 15000+600000
+ 19654 strings out of 478682
+ 387585 string characters out of 5862550
+ 828588 words of memory out of 5000000
+ 39422 multiletter control sequences out of 15000+600000
  411995 words of font info for 114 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  90i,7n,123p,497b,869s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on doc.pdf (5 pages).
+Output written on doc.pdf (6 pages).

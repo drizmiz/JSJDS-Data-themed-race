@@ -170,6 +170,7 @@ dag <- dagify(
   W ~ Z,
   Z ~ Y,
   Y ~ X,
+  W ~ X,
   Y ~ U1,
   Z ~ U2,
   W ~ U3,
@@ -185,13 +186,15 @@ ggplot(dag, aes(x = x, y = y, xend = xend, yend = yend)) +
     )
   ) +
   geom_dag_text(colour = 'white') +
-  geom_dag_label_repel(aes(label = label))+
+  geom_dag_label_repel(aes(label = label)) +
   theme_dag_blank()
 ```
 
 此图是有向无环图(Directed acyclic graph, DAG)，边代表因果作用.
 
 我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
+
+首先注意到数据集中存在许多缺失数据：
 
 ```{r cache = TRUE, echo = FALSE, warning = FALSE, fig.showtext = TRUE, fig.width = 9, fig.height = 4, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
 fdi <- read_csv(
@@ -212,8 +215,52 @@ fdi_na <- fdi %>% complete(年份, 国家)
 matrixplot(fdi_na)
 ```
 
-// TODO... - R. Deng
+使用linear regression with bootstrap进行缺失数据填补.
 
+```{r message = FALSE, warning = FALSE, results = 'hide'}
+fdi <- read_csv(
+  file = "./data/investment/FDI_useful.csv",
+  col_types = cols(
+    年份 = col_double(),
+    国家 = col_factor()
+  )
+) %>% unite(col = 国家, 地区, 国家)
+
+country_name <- fdi[["国家"]] %>% unique()
+
+fdi_na <- fdi %>%
+  tidyr::complete(年份, 国家) %>%
+  rename(对外直接投资 = `对外直接投资:截至累计`)
+
+fdi_lg <- fdi_na %>%
+  mutate(lg = log(对外直接投资), .keep = "unused")
+
+fill_a_country <- function(.dt, .cn) {
+  res <- .dt %>%
+    filter(国家 == .cn) %>%
+    mice(method = "norm.boot", m = 1, maxit = 3) %>%
+    complete()
+  if (any(is.na(res$lg))) {
+    non_na <- !(res$lg %>% is.na())
+    res$lg <- res$lg[non_na][1]
+  }
+  return(res)
+}
+
+fdi_filled <- country_name %>% map(~fill_a_country(fdi_lg, .x))
+
+result <- fdi_filled %>%
+  reduce(rbind) %>%
+  mutate(对外直接投资 = exp(lg), .keep = "unused") %>%
+  separate(col = 国家, into = c("地区", "国家"), sep = "_")
+
+result %>% write_csv("./data/investment/FDI_filled.csv")
+```
+
+```
+
+
+```
 
 ## Communicate
 

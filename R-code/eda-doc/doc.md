@@ -163,7 +163,7 @@ df1 %>% write_csv(file = "./data/investment/FDI_OBOR.csv")
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{/media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-code/eda-doc/doc_files/figure-latex/unnamed-chunk-5-1} 
+{\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{doc_files/figure-latex/unnamed-chunk-5-1} 
 
 }
 
@@ -174,16 +174,60 @@ df1 %>% write_csv(file = "./data/investment/FDI_OBOR.csv")
 
 我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
 
+首先注意到数据集中存在许多缺失数据：
+
 \begin{figure}
 
-{\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{/media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-code/eda-doc/doc_files/figure-latex/unnamed-chunk-6-1} 
+{\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{doc_files/figure-latex/unnamed-chunk-6-1} 
 
 }
 
 \caption{缺失数据示意图}\label{fig:unnamed-chunk-6}
 \end{figure}
 
-// TODO... - R. Deng
+使用linear regression with bootstrap进行缺失数据填补.
+
+
+```r
+fdi <- read_csv(
+  file = "./data/investment/FDI_useful.csv",
+  col_types = cols(
+    年份 = col_double(),
+    国家 = col_factor()
+  )
+) %>% unite(col = 国家, 地区, 国家)
+
+country_name <- fdi[["国家"]] %>% unique()
+
+fdi_na <- fdi %>%
+  tidyr::complete(年份, 国家) %>%
+  rename(对外直接投资 = `对外直接投资:截至累计`)
+
+fdi_lg <- fdi_na %>%
+  mutate(lg = log(对外直接投资), .keep = "unused")
+
+fill_a_country <- function(.dt, .cn) {
+  res <- .dt %>%
+    filter(国家 == .cn) %>%
+    mice(method = "norm.boot", m = 1, maxit = 3) %>%
+    complete()
+  if (any(is.na(res$lg))) {
+    non_na <- !(res$lg %>% is.na())
+    res$lg <- res$lg[non_na][1]
+  }
+  return(res)
+}
+
+fdi_filled <- country_name %>% map(~fill_a_country(fdi_lg, .x))
+
+result <- fdi_filled %>%
+  reduce(rbind) %>%
+  mutate(对外直接投资 = exp(lg), .keep = "unused") %>%
+  separate(col = 国家, into = c("地区", "国家"), sep = "_")
+
+result %>% write_csv("./data/investment/FDI_filled.csv")
+```
+
 
 
 ## Communicate

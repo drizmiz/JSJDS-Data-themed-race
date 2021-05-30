@@ -131,16 +131,6 @@ Y0go <- as.matrix(logfemrate[, 2:ncol(logfemrate)])
 # Check II: comparison to Table 9 in Cunningham&Shah (2018)
 # cbind(1985:2009,Y1go)
 
-# Time periods
-
-T0go <- 19
-T1go <- 6
-T01go <- T0go + T1go
-
-# Raw data plots
-
-time <- c(seq(1985, 2009, 1))
-
 pdf_plot1()
 
 ### Placebo specification tests
@@ -185,7 +175,7 @@ xtable(cbind(p.noeff.did.mb, p.noeff.sc.mb, p.noeff.did.all, p.noeff.sc.all))
 ### Pointwise CI
 
 alpha <- 0.1
-grid <- c(seq(-5, 2, 0.01))
+grid <- seq(-5, 2, 0.01)
 
 vec.ci.sc <- vec.ci.did <- m.ci.sc <- m.ci.did <- NULL
 
@@ -201,6 +191,6 @@ for (t in 1:T1go) {
   m.ci.did <- cbind(m.ci.did, mean(ci.did))
 }
 
-time <- c(seq(2004, 2009, 1))
+time <- seq(2004, 2009, 1)
 
 pdf_plot3()

@@ -7,9 +7,9 @@ import numpy as np
 tl = Timeline(init_opts=opts.InitOpts(
     theme=ThemeType.INFOGRAPHIC,
     bg_color='white',
-    page_title='外商直接投资情况'
+    page_title='预期寿命'
 ))
-with open("./data/country_ce.json", 'r', encoding='utf-8') as f:
+with open("./country_ce.json", 'r', encoding='utf-8') as f:
     ce_dict = json.load(f)
 
 df = pd.read_csv('./FDI_filled_m.csv')
@@ -17,7 +17,7 @@ df.iloc[:, 3] = df.iloc[:, 3].apply(np.log1p)
 for year in range(2003, 2019+1):
     map = (
         Map()
-        .add(df.columns.tolist()[-1]+"（对数值，原单位：百万美元）",
+        .add(df.columns.tolist()[-1],
              [[ce_dict[row['国家']], row[3]]
                  for _, row in df[df.iloc[:, 0] == year].iterrows()],
              maptype="world",
@@ -33,5 +33,5 @@ for year in range(2003, 2019+1):
         )
     )
     tl.add(map, f"{year}年")
-# tl.render("./out/vis1.html")
-tl.render("./out/vis2.html")
+# tl.render("vis1.html")
+tl.render("vis2.html")

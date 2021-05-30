@@ -1,21 +1,85 @@
 # Created by: drizzle
 # Created on: 2021/5/30
 
-# Difference-in-differences
-did <- function(Y1, Y0) {
-  u.hat <- Y1 - mean(Y1 - rowMeans(Y0)) - rowMeans(Y0)
-  return(u.hat)
+### Packages
+library(xtable)
+library(plotrix)
+
+library(limSolve)
+
+source("sc_functions.R")
+source("sc_prepare.R")
+
+### Test head
+
+country_name <<- country_list[i]
+idx <- country_name %>% match(names(fdi_data))
+
+Y1go <<- as.matrix(fdi_data[, idx])
+Y0go <<- as.matrix(fdi_data[, (seq_along(fdi_data))[-idx]])
+
+### Specify norm for test statistic
+
+q_norm <- 1 # L_1 norm
+
+### Placebo specification tests
+
+sens.sc.mb <- sens.did.mb <- sens.sc.all <- sens.did.all <- matrix(NA, 3, 1)
+
+Y1pre <- Y1go[1:T0go]
+Y0pre <- Y0go[1:T0go,]
+
+perm <- 200
+
+for (t in 1:3) {
+  sens.sc.mb[t, 1] <- moving.block.q(Y1pre, Y0pre, (T0go - t), t, "sc", q_norm)
+  sens.sc.all[t, 1] <- all.q(Y1pre, Y0pre, (T0go - t), t, "sc", perm, q_norm)
+  sens.did.mb[t, 1] <- moving.block.q(Y1pre, Y0pre, (T0go - t), t, "did", q_norm)
+  sens.did.all[t, 1] <- all.q(Y1pre, Y0pre, (T0go - t), t, "did", perm, q_norm)
 }
 
-# Synthetic control (requires R-package limSolve)
-sc <- function(Y1, Y0) {
-  J <- dim(Y0)[2]
-  e <- matrix(1, 1, J)
-  f <- 1
-  g <- diag(x = 1, J, J)
-  h <- matrix(0, J, 1)
-  w.hat <- lsei(A = Y0, B = Y1, E = e, F = f, G = g, H = h, type = 2)$X
-  u.hat <- Y1 - Y0 %*% w.hat
-  return(list(u.hat = u.hat, w.hat = w.hat))
+xtable(cbind(sens.did.mb[, 1], sens.sc.mb[, 1], sens.did.all[, 1], sens.sc.all[, 1]))
+
+### Residual plots pre-treatment period
+
+r.pre.sc <- sc(Y1pre, Y0pre)
+
+u.hat.go.pre.did <- did(Y1pre, Y0pre)
+u.hat.go.pre.sc <- r.pre.sc$u.hat
+
+pdf_plot2()
+
+### No effect
+
+perm <- 200
+
+p.noeff.did.mb <- moving.block.q(Y1go, Y0go, T0go, T1go, "did", q_norm)
+p.noeff.sc.mb <- moving.block.q(Y1go, Y0go, T0go, T1go, "sc", q_norm)
+
+p.noeff.did.all <- all.q(Y1go, Y0go, T0go, T1go, "did", perm, q_norm)
+p.noeff.sc.all <- all.q(Y1go, Y0go, T0go, T1go, "sc", perm, q_norm)
+
+xtable(cbind(p.noeff.did.mb, p.noeff.sc.mb, p.noeff.did.all, p.noeff.sc.all))
+
+### Pointwise CI
+
+alpha <- 0.1
+grid <- seq(-5, 2, 0.01)
+
+vec.ci.sc <- vec.ci.did <- m.ci.sc <- m.ci.did <- NULL
+
+for (t in 1:T1go) {
+  indices <- c(1:T0go, T0go + t)
+  Y1ci <- Y1go[indices]
+  Y0ci <- Y0go[indices,]
+  ci.sc <- ci(Y1ci, Y0ci, "sc", alpha, grid)
+  vec.ci.sc <- rbind(vec.ci.sc, cbind((t + 2003), ci.sc))
+  m.ci.sc <- cbind(m.ci.sc, mean(ci.sc))
+  ci.did <- ci(Y1ci, Y0ci, "did", alpha, grid)
+  vec.ci.did <- rbind(vec.ci.did, cbind((t + 2003), ci.did))
+  m.ci.did <- cbind(m.ci.did, mean(ci.did))
 }
 
+time <- seq(2004, 2009, 1)
+
+pdf_plot3()

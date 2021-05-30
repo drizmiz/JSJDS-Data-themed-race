@@ -4,7 +4,11 @@ from pyecharts import options as opts
 from pyecharts.charts import Timeline, Map
 from pyecharts.globals import ThemeType
 import numpy as np
-tl = Timeline()
+tl = Timeline(init_opts=opts.InitOpts(
+    theme=ThemeType.INFOGRAPHIC,
+    bg_color='white',
+    page_title='外商直接投资情况'
+))
 with open("./country_ce.json", 'r', encoding='utf-8') as f:
     ce_dict = json.load(f)
 
@@ -12,11 +16,7 @@ df = pd.read_csv('./FDI_useful.csv')
 df.iloc[:, 3] = df.iloc[:, 3].apply(np.log1p)
 for year in range(2003, 2019+1):
     map = (
-        Map(init_opts=opts.InitOpts(
-            theme=ThemeType.INFOGRAPHIC,
-            bg_color='white',
-            page_title='外商直接投资情况'
-        ))
+        Map()
         .add(df.columns.tolist()[-1]+"（对数值，原单位：百万美元）",
              [[ce_dict[row['国家']], row[3]]
                  for _, row in df[df.iloc[:, 0] == year].iterrows()],

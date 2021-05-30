@@ -12,7 +12,7 @@ tl = Timeline(init_opts=opts.InitOpts(
 with open("./country_ce.json", 'r', encoding='utf-8') as f:
     ce_dict = json.load(f)
 
-df = pd.read_csv('./FDI_useful.csv')
+df = pd.read_csv('./FDI_filled_m.csv')
 df.iloc[:, 3] = df.iloc[:, 3].apply(np.log1p)
 for year in range(2003, 2019+1):
     map = (
@@ -33,4 +33,5 @@ for year in range(2003, 2019+1):
         )
     )
     tl.add(map, f"{year}年")
-tl.render("vis1.html")
+# tl.render("vis1.html")
+tl.render("vis2.html")

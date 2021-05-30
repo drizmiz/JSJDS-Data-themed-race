@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  30 MAY 2021 02:38
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  30 MAY 2021 17:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1045,40 +1045,40 @@ LaTeX Font Info:    Font shape `TU/FiraMono(0)/b/n' will be
 (Font)              scaled to size 8.60312pt on input line 139.
 Font mapping `tex-ansi.tec' for font `Fira Mono Medium' not found.
 LaTeX Font Info:    Font shape `TU/FandolFang-Regular(0)/m/n' will be
-(Font)              scaled to size 9.91795pt on input line 148.
+(Font)              scaled to size 9.91795pt on input line 149.
 [1
 
 ]
 File: workflow.png Graphic file (type bmp)
 <workflow.png>
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.52812pt on input line 188.
+(Font)              scaled to size 7.52812pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 188.
+(Font)              scaled to size 5.0pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.52881pt on input line 188.
+(Font)              scaled to size 7.52881pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 188.
+(Font)              scaled to size 5.00046pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.52731pt on input line 188.
+(Font)              scaled to size 7.52731pt on input line 189.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 188.
+(Font)              scaled to size 4.99947pt on input line 189.
 LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/m/sl' in size <10.5393
 7> not available
 (Font)              Font shape `TU/FandolSong-Regular(0)/m/it' tried instead on
- input line 195.
+ input line 196.
 [2] [3]
 
 LaTeX Font Warning: Font shape `TU/FiraMono(0)/m/it' undefined
-(Font)              using `TU/FiraMono(0)/m/n' instead on input line 255.
+(Font)              using `TU/FiraMono(0)/m/n' instead on input line 256.
 
 
 LaTeX Font Warning: Font shape `TU/FandolFang-Regular(0)/m/it' undefined
 (Font)              using `TU/FandolFang-Regular(0)/m/n' instead on input line 
-255.
+256.
 
 
-Underfull \vbox (badness 10000) detected at line 284
+Underfull \vbox (badness 10000) detected at line 285
  []
 
 [4]
@@ -1086,6 +1086,10 @@ File: /media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-cod
 e/eda-doc/doc_files/figure-latex/unnamed-chunk-5-1.pdf Graphic file (type pdf)
 <use /media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-code
 /eda-doc/doc_files/figure-latex/unnamed-chunk-5-1.pdf>
+File: /media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-cod
+e/eda-doc/doc_files/figure-latex/unnamed-chunk-6-1.pdf Graphic file (type pdf)
+<use /media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-code
+/eda-doc/doc_files/figure-latex/unnamed-chunk-6-1.pdf>
 [5] [6] (./doc.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
@@ -1094,10 +1098,10 @@ Package rerunfilecheck Info: File `doc.out' has not changed.
 (rerunfilecheck)             Checksum: DB86CC0AF7C008B5672B232DC3F7FAFB;963.
  ) 
 Here is how much of TeX's memory you used:
- 19654 strings out of 478682
- 387585 string characters out of 5862550
- 828588 words of memory out of 5000000
- 39422 multiletter control sequences out of 15000+600000
+ 19665 strings out of 478682
+ 388825 string characters out of 5862550
+ 828617 words of memory out of 5000000
+ 39432 multiletter control sequences out of 15000+600000
  411995 words of font info for 114 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  90i,7n,123p,497b,869s stack positions out of 5000i,500n,10000p,200000b,80000s

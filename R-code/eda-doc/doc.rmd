@@ -33,13 +33,17 @@ library(lubridate)
 
 library(ggdag)
 library(showtext)
+
+library(mice)
+library(VIM)
 ```
 
 ```{r comment = ""}
 xfun::session_info(
         packages = c(
                 "readr", "tidyr", "stringr", "dplyr", "purrr",
-                "ggplot2", "lubridate", "ggdag", "showtext"
+                "tidyverse", "lubridate", "mice",
+                "ggplot2", "ggdag", "showtext", "VIM"
         ), dependencies = FALSE
 )
 ```
@@ -188,6 +192,25 @@ ggplot(dag, aes(x = x, y = y, xend = xend, yend = yend)) +
 此图是有向无环图(Directed acyclic graph, DAG)，边代表因果作用.
 
 我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
+
+```{r cache = TRUE, echo = FALSE, warning = FALSE, fig.showtext = TRUE, fig.width = 9, fig.height = 4, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
+fdi <- read_csv(
+  file = "./data/investment/FDI_useful.csv",
+  col_types = cols(
+    年份 = col_integer(),
+    国家 = col_factor()
+  )
+) %>% select(-地区)
+
+country_name <- fdi[["国家"]] %>% unique()
+
+list_c <- country_name %>%
+  map(~ fdi %>% filter(国家 == .x) %>% .[["年份"]])
+
+fdi_na <- fdi %>% complete(年份, 国家)
+
+matrixplot(fdi_na)
+```
 
 // TODO... - R. Deng
 

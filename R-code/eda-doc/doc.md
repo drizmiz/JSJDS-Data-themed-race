@@ -28,7 +28,8 @@ monofont: Fira Mono
 xfun::session_info(
         packages = c(
                 "readr", "tidyr", "stringr", "dplyr", "purrr",
-                "ggplot2", "lubridate", "ggdag", "showtext"
+                "tidyverse", "lubridate", "mice",
+                "ggplot2", "ggdag", "showtext", "VIM"
         ), dependencies = FALSE
 )
 ```
@@ -48,8 +49,8 @@ Locale:
 
 Package version:
   dplyr_1.0.6      ggdag_0.2.3      ggplot2_3.3.3    lubridate_1.7.10
-  purrr_0.3.4      readr_1.4.0      showtext_0.9-2   stringr_1.4.0   
-  tidyr_1.1.3     
+  mice_3.13.0      purrr_0.3.4      readr_1.4.0      showtext_0.9-2  
+  stringr_1.4.0    tidyr_1.1.3      tidyverse_1.3.1  VIM_6.1.0       
 ```
 
 ## python info
@@ -172,6 +173,15 @@ df1 %>% write_csv(file = "./data/investment/FDI_OBOR.csv")
 此图是有向无环图(Directed acyclic graph, DAG)，边代表因果作用.
 
 我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{/media/drizzle/CHIPFANCIER Files/TIP/Project/JSJDS-Data-themed-race/R-code/eda-doc/doc_files/figure-latex/unnamed-chunk-6-1} 
+
+}
+
+\caption{缺失数据示意图}\label{fig:unnamed-chunk-6}
+\end{figure}
 
 // TODO... - R. Deng
 

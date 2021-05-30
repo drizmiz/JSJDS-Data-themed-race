@@ -7,8 +7,11 @@ library(plotrix)
 
 library(limSolve)
 
+# set.seed(seed = 12345)
+
 source("sc_functions.R")
 source("sc_head.R")
+source("plot.R")
 
 ### Test head
 
@@ -51,7 +54,7 @@ pdf_plot2("test/our_graphics/")
 
 ### No effect
 
-perm <- 200
+perm <- 20
 
 p.noeff.did.mb <- moving.block.q(Y1go, Y0go, T0go, T1go, "did", q_norm)
 p.noeff.sc.mb <- moving.block.q(Y1go, Y0go, T0go, T1go, "sc", q_norm)
@@ -64,7 +67,7 @@ xtable(cbind(p.noeff.did.mb, p.noeff.sc.mb, p.noeff.did.all, p.noeff.sc.all))
 ### Pointwise CI
 
 alpha <- 0.1
-grid <- seq(-5, 2, 0.01)
+grid <- seq(-5, 3, 0.01)
 
 vec.ci.sc <- vec.ci.did <- m.ci.sc <- m.ci.did <- NULL
 
@@ -73,13 +76,13 @@ for (t in 1:T1go) {
   Y1ci <- Y1go[indices]
   Y0ci <- Y0go[indices,]
   ci.sc <- ci(Y1ci, Y0ci, "sc", alpha, grid)
-  vec.ci.sc <- rbind(vec.ci.sc, cbind((t + 2003), ci.sc))
+  vec.ci.sc <- rbind(vec.ci.sc, cbind((t + Tpre), ci.sc))
   m.ci.sc <- cbind(m.ci.sc, mean(ci.sc))
   ci.did <- ci(Y1ci, Y0ci, "did", alpha, grid)
-  vec.ci.did <- rbind(vec.ci.did, cbind((t + 2003), ci.did))
+  vec.ci.did <- rbind(vec.ci.did, cbind((t + Tpre), ci.did))
   m.ci.did <- cbind(m.ci.did, mean(ci.did))
 }
 
-time <- seq(2004, 2009, 1)
+time <- seq(Tobor, Tend, 1)
 
 pdf_plot3("test/our_graphics/")

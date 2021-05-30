@@ -9,11 +9,12 @@ source("sc_prepare.R")
 
 T0 <- 2003
 Tobor <- 2013
+Tpre <- Tobor - 1
 Tend <- 2019
 
-T0go <- Tobor - T0
-T01go <- Tend - T0 + 1
-T1go <- T01go - T0go
+T0go <- Tobor - T0    # 10
+T01go <- Tend - T0 + 1  # 17
+T1go <- T01go - T0go  # 7
 
 time <- seq(T0, Tend, 1)
 

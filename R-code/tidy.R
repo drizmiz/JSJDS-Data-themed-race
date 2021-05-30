@@ -16,7 +16,7 @@ process <- function(raw_df) {
     rename(时间 = X1)
 
   fliped_df <- simplified_df %>%
-    pivot_longer(c(-时间), names_to = "observation", values_to = "val")
+    pivot_longer(-时间, names_to = "observation", values_to = "val")
 
   stdize <- function(str) {
     str %>%

@@ -8,11 +8,11 @@ library(plotrix)
 library(limSolve)
 
 source("sc_functions.R")
-source("sc_prepare.R")
+source("sc_head.R")
 
 ### Test head
 
-country_name <<- country_list[i]
+country_name <<- country_list[1]
 idx <- country_name %>% match(names(fdi_data))
 
 Y1go <<- as.matrix(fdi_data[, idx])
@@ -47,7 +47,7 @@ r.pre.sc <- sc(Y1pre, Y0pre)
 u.hat.go.pre.did <- did(Y1pre, Y0pre)
 u.hat.go.pre.sc <- r.pre.sc$u.hat
 
-pdf_plot2()
+pdf_plot2("test/our_graphics/")
 
 ### No effect
 
@@ -82,4 +82,4 @@ for (t in 1:T1go) {
 
 time <- seq(2004, 2009, 1)
 
-pdf_plot3()
+pdf_plot3("test/our_graphics/")

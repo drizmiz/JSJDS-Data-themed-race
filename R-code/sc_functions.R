@@ -80,7 +80,7 @@ ci <- function(Y1, Y0, M, alpha, thetagrid) {
   T01 <- dim(Y0)[1]
   T0 <- T01 - 1
   p.vec <- rep(NA, length(thetagrid))
-  for (ind in 1:length(thetagrid)) {
+  for (ind in seq_along(thetagrid)) {
     Y1_0 <- Y1
     Y1_0[T01] <- Y1[T01] - thetagrid[ind]
     if (M == "sc") {

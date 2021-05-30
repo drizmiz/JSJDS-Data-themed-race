@@ -3,6 +3,8 @@
 
 library(tidyverse)
 
+source("sc_prepare.R")
+
 # Time periods
 
 T0 <- 2003

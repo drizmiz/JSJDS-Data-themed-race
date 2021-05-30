@@ -2,6 +2,7 @@
 # Created on: 2021/5/30
 
 library(tidyverse)
+library(showtext)
 
 # Reformat data
 
@@ -29,23 +30,38 @@ time <- seq(T0, Tend, 1)
 
 ### Data (obtained from Scott Cunningham and Manisha Shah)
 
-logfemrate <- read.csv("../data/investment/FDI_for_sc.csv", header = T)
+logfemrate <- read_csv("../data/investment/FDI_for_sc.csv") %>% as.data.frame()
+country_list <- read_lines("../data/obor_list.txt")
 
-# First column: RI; columns 2-51: controls
+# First column: trials (one-belt-one-road); columns 2-51: controls
 
-Y1go <- as.matrix(logfemrate[, 1])
-Y0go <- as.matrix(logfemrate[, 2:ncol(logfemrate)])
+kp <- country_list %in% names(logfemrate) %>% which()
+country_list <- country_list[kp]
 
-directory <- "test/our_graphics/"
 
-pdf_plot1 <- function() {
-  pdf(paste0(directory, "investment_data_raw.pdf"), pointsize = 14, width = 8.0, height = 6.0)
+for (i in seq_along(country_list %>% head(10))) {
+  cty <- country_list[i]
+  idx <- cty %>% match(names(logfemrate))
+
+  Y1go <- as.matrix(logfemrate[, idx])
+  Y0go <- as.matrix(logfemrate[, (1:ncol(logfemrate))[-idx]])
+
+  directory <- "test/our_graphics/"
+
+  pdf_plot_raw()
+}
+
+
+pdf_plot_raw <- function() {
+  pdf(paste0(directory, cty, "_investment_data_raw.pdf"), pointsize = 14, width = 8.0, height = 6.0)
+  # for Unicode characters like CJK
+  showtext_begin()
   plot(range(time), c(-2, 14), ylab = "Log FDI from China", xlab = "Time", main = "", type = "n")
   for (j in 1:dim(Y0go)[2]) lines(time, Y0go[, j], col = "darkgrey", lwd = 0.5, lty = 1)
   lines(time, Y1go, col = "black", lwd = 5)
   abline(v = time[T0go] + 0.5, col = "darkgrey", lty = 2, lwd = 1.5)
-  legend("topleft", legend = c("Other Countries", "Cananda"), seg.len = 2, col = c("darkgrey", "black"), fill = NA, border = NA, lty = c(1, 1), lwd = c(0.5, 5), merge = T, bty = "n")
+  legend("topleft", legend = c("其他国家", logfemrate %>% names() %>% .[idx]), seg.len = 2, col = c("darkgrey", "black"),
+         fill = NA, border = NA, lty = c(1, 1), lwd = c(0.5, 5), merge = T, bty = "n")
+  showtext_end()
   graphics.off()
 }
-
-pdf_plot1()

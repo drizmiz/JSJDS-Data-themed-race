@@ -1,19 +1,27 @@
 # Created by: drizzle
 # Created on: 2021/5/30
 
-directory <- "test/graphics/"
+source("sc_head.R")
 
-pdf_plot1 <- function() {
-  pdf(paste0(directory, "gonorrhoea_data_raw.pdf"), pointsize = 14, width = 8.0, height = 6.0)
-  plot(range(time), c(0, 10), ylab = "Log Female Gonorrhea per 100,000", xlab = "Time", main = "", type = "n")
+library(showtext)
+
+pdf_plot_raw <- function(directory) {
+  pdf(paste0(directory, country_name, "_investment_data_raw.pdf"), pointsize = 14, width = 8.0, height = 6.0)
+  # for Unicode characters like CJK
+  showtext_begin()
+  plot(range(time), c(-2, 14), ylab = "Log FDI from China", xlab = "Time", main = "", type = "n")
   for (j in 1:dim(Y0go)[2]) lines(time, Y0go[, j], col = "darkgrey", lwd = 0.5, lty = 1)
   lines(time, Y1go, col = "black", lwd = 5)
   abline(v = time[T0go] + 0.5, col = "darkgrey", lty = 2, lwd = 1.5)
-  legend("topleft", legend = c("Other U.S. States", "Rhode Island"), seg.len = 2, col = c("darkgrey", "black"), fill = NA, border = NA, lty = c(1, 1), lwd = c(0.5, 5), merge = T, bty = "n")
+  legend("topleft", legend = c("其他国家", country_name), seg.len = 2, col = c("darkgrey", "black"),
+         fill = NA, border = NA, lty = c(1, 1), lwd = c(0.5, 5), merge = T, bty = "n")
+  showtext_end()
   graphics.off()
 }
 
-pdf_plot2 <- function() {
+# repli(pdf_plot_raw(directory = "../visualization/obor_raw_plot/"))
+
+pdf_plot2 <- function(directory) {
   pdf(paste0(directory, "gonorrhoea_resid_pre_did.pdf"), pointsize = 16, width = 6.0, height = 6.0)
   plot(range(seq(1985, 2003, 1)), c(-1, 1), ylab = "Residuals Pre-Treatment Period", xlab = "Time", main = "Difference-in-Differences", type = "n")
   points(seq(1985, 2003, 1), u.hat.go.pre.did, col = "black", pch = 20, lwd = 2)
@@ -27,7 +35,7 @@ pdf_plot2 <- function() {
   graphics.off()
 }
 
-pdf_plot3 <- function() {
+pdf_plot3 <- function(directory) {
   pdf(paste0(directory, "ci_gonorrhoea_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
   plot(vec.ci.sc[, 1], vec.ci.sc[, 2], ylab = "Gap in Log Female Gonorrhea per 100,000", xlab = "Years", main = "", col = "black", pch = "eda-doc", xlim = c(2003, 2010), ylim = c(-2, 2))
   title("Synthetic Control")

@@ -3,8 +3,6 @@
 
 set.seed(seed = 12345)
 
-source("raw_plot.R")
-
 ### Packages
 library(xtable)
 library(plotrix)
@@ -194,3 +192,5 @@ for (t in 1:T1go) {
 time <- seq(2004, 2009, 1)
 
 pdf_plot3()
+
+

@@ -49,24 +49,20 @@ library(VIM)
 
 ## 数据模型
 
-我们的数据模型如图所示：
+我们的数据模型如[图1](#model)所示.
 
-```{r echo = FALSE, warning = FALSE, fig.cap = "数据模型示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
-include_graphics("resources/DAG.pdf")
-```
+![数据模型示意图](resources/DAG.pdf){#model .class width=60% height=60%}
 
-此图在R语言中，用**ggdag**[@citation_ggdag]生成. 是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
+此图在R语言中，用**ggdag**[@citation_ggdag]生成. 这是有向无环图(Directed acyclic graph, DAG)，其中边代表因果作用[@pearl].
 
 值得注意的是，在该模型中，我们假定一带一路不会以其他方式影响地区的经济发展水平（即不存在$X\rightarrow Z$的线），以避免出现替代指标悖论.
 
 ## 分析技术 {#ana}
 
-本项目主要利用到以下三种分析技术. 首先注意到数据集中存在许多缺失数据[@citation_VIM]. 缺失数据的删除或填补需要用到一些技术. 分析一带一路的影响，就是要分析某一事件发生后，某一值的变化情况. 该值自身也存在着模型外因素导致的变化趋势，所以我们必须利用某些技术来去除这些因素的影响. 于是，我们运用如
+本项目主要利用到以下三种分析技术. 首先注意到数据集中存在许多缺失数据，如[图2](#missd)[@citation_VIM]所示. 缺失数据的删除或填补需要用到一些技术. 分析一带一路的影响，就是要分析某一事件发生后，某一值的变化情况. 该值自身也存在着模型外因素导致的变化趋势，所以我们必须利用某些技术来去除这些因素的影响. 于是，我们运用如
 下所述的双重差分和合成控制两种技术.
 
-```{r echo = FALSE, warning = FALSE, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
-include_graphics("resources/Missing data.pdf")
-```
+![缺失数据示意图](resources/Missing data.pdf){#missd .class width=75% height=75%}
 
 ### 缺失数据填补
 
@@ -95,7 +91,7 @@ $$
 
 ### 合成控制法
 
-合成控制法(Synthetic Control)是另一种经典技术. 不难发现，DID所要求的条件过高，在现实生活中一般并不成立. 举例来说，实验组可能有其自身特点，导致增长本来就比对照组快. 而所谓合成控制，就是用对照组的数据“合成”出来一个虚拟的实验组，然后应用到事件发生后的情况，得到实验组的反事实数据. 具体来说，就是以下模型[@sc_method].
+合成控制法(Synthetic Control)是另一种经典技术. 不难发现，DID所要求的条件过高，在现实生活中一般并不成立. 举例来说，实验组可能有其自身特点，导致增长本来就比对照组快. 而所谓合成控制，就是用对照组的数据“合成”出来一个虚拟的实验组，然后应用到事件发生后的情况，得到实验组的反事实数据. 具体来说，就是以下模型[@sc_method]
 
 $$
 P_{t}^{N}=\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}, \text{where }w \geq 0,\  \sum_{j=2}^{J+1} w_{j}=1.
@@ -152,16 +148,13 @@ R采用lazy evaluation，只有在真正用到`fun`的时候才会对其进行�
 
 ### R环境
 
-本项目的R部分使用如下环境生成[^dep]：
-
-[^dep]: 部分依赖省略.
-
+本项目的R部分使用如下环境生成，base包和部分依赖已省略.
 
 ```{r echo=FALSE}
 xfun::session_info(
   packages = c(
     "readr", "tidyr", "stringr", "dplyr", "purrr",
-    "tidyverse", "ggplot2", "lubridate", "mice",
+    "tidyverse", "lubridate", "mice",
     "ggdag", "showtext", "VIM", "plotrix"
   ), dependencies = FALSE
 )
@@ -181,11 +174,11 @@ xfun::session_info(
 
 ## The Workflow
 
-根据 _R for Data Science_[@Wickham2017R]，数据分析的一般流程如下图所示. 本项目也符合这种模式.
+根据 _R for Data Science_[@Wickham2017R]，数据分析的一般流程如[图3](#wf)所示. 本项目也符合这种模式.
 
-![The Data Science Workflow[^1]](resources/workflow.png)
+![The Data Science Workflow[^1]](resources/workflow.png){#wf}
 
-[^1]: This picture is from _R for Data Science_, released under [CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/).
+[^1]: 此图取自 _R for Data Science_，以[CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/) 发布.
 
 ## 数据集说明
 

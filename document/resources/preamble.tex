@@ -1,0 +1,5 @@
+\let\oldhref\href
+\renewcommand{\href}[2]{\oldhref{#1}{\textcolor{blue}{\underline{#2}}}}
+
+\let\oldhyperlink\hyperlink
+\renewcommand{\hyperlink}[2]{\oldhyperlink{#1}{\textcolor{red}{\underline{#2}}}}

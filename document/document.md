@@ -22,48 +22,11 @@ monofont: Fira Mono
 
 [^a]: 名拼音序.
 
-# 环境
-
-## R环境
-
-本项目的R部分使用如下环境生成[^dep]：
-
-[^dep]: 部分依赖省略.
 
 
+# 概述
 
-
-```
-## R version 4.1.0 (2021-05-18)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.2 LTS
-## 
-## Locale:
-##   LC_CTYPE=zh_CN.UTF-8       LC_NUMERIC=C              
-##   LC_TIME=zh_CN.UTF-8        LC_COLLATE=zh_CN.UTF-8    
-##   LC_MONETARY=zh_CN.UTF-8    LC_MESSAGES=zh_CN.UTF-8   
-##   LC_PAPER=zh_CN.UTF-8       LC_NAME=C                 
-##   LC_ADDRESS=C               LC_TELEPHONE=C            
-##   LC_MEASUREMENT=zh_CN.UTF-8 LC_IDENTIFICATION=C       
-## 
-## Package version:
-##   dplyr_1.0.6      ggdag_0.2.3      ggplot2_3.3.3    lubridate_1.7.10
-##   mice_3.13.0      purrr_0.3.4      readr_1.4.0      showtext_0.9-2  
-##   stringr_1.4.0    tidyr_1.1.3      tidyverse_1.3.1  VIM_6.1.0
-```
-
-## python环境
-
-本项目的python部分使用python 3.8.8生成，部分包版本号如下：
-
-> **conda** 4.10.1;
-> **pyecharts** 1.9.0;
-> **numpy** 1.20.1;
-> **json5** 0.9.5;
-> **pandas** 1.2.4;
-> **jupyterlab** 3.0.14
-
-# 主要结果
+# 主要工作
 
 ## 数据模型
 
@@ -75,7 +38,7 @@ monofont: Fira Mono
 
 }
 
-\caption{数据模型示意图}\label{fig:unnamed-chunk-3}
+\caption{数据模型示意图}\label{fig:unnamed-chunk-2}
 \end{figure}
 
 此图在R语言中，用**ggdag**[@citation_ggdag]生成. 是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
@@ -94,7 +57,7 @@ monofont: Fira Mono
 
 }
 
-\caption{缺失数据示意图}\label{fig:unnamed-chunk-4}
+\caption{缺失数据示意图}\label{fig:unnamed-chunk-3}
 \end{figure}
 
 ### 缺失数据填补
@@ -175,7 +138,48 @@ repli(placebo_specification_test())
 
 R采用lazy evaluation，只有在真正用到`fun`的时候才会对其进行求值，其中`fun`的返回值并不必须良定. 这在这里是重要的特性，因为一般的语言具有引用透明(reference transparency)的特点，会将`fun`的返回值作为`repli`的输入，这会对我们的目标造成不便. 此处，`substitute`将参数转变为`promise`，而并不对其进行求值；在`for`循环内部，调用`eval`进行求值，以达到重复执行某个函数的目的.
 
-# 具体流程
+# 具体细节
+
+## 环境
+
+### R环境
+
+本项目的R部分使用如下环境生成[^dep]：
+
+[^dep]: 部分依赖省略.
+
+
+
+```
+## R version 4.1.0 (2021-05-18)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.2 LTS
+## 
+## Locale:
+##   LC_CTYPE=zh_CN.UTF-8       LC_NUMERIC=C              
+##   LC_TIME=zh_CN.UTF-8        LC_COLLATE=zh_CN.UTF-8    
+##   LC_MONETARY=zh_CN.UTF-8    LC_MESSAGES=zh_CN.UTF-8   
+##   LC_PAPER=zh_CN.UTF-8       LC_NAME=C                 
+##   LC_ADDRESS=C               LC_TELEPHONE=C            
+##   LC_MEASUREMENT=zh_CN.UTF-8 LC_IDENTIFICATION=C       
+## 
+## Package version:
+##   dplyr_1.0.6      ggdag_0.2.3      ggplot2_3.3.3    lubridate_1.7.10
+##   mice_3.13.0      purrr_0.3.4      readr_1.4.0      showtext_0.9-2  
+##   stringr_1.4.0    tidyr_1.1.3      tidyverse_1.3.1  VIM_6.1.0
+```
+
+### python环境
+
+本项目的python部分使用python 3.8.8生成，部分包版本号如下：
+
+> **conda** 4.10.1;
+> **pyecharts** 1.9.0;
+> **numpy** 1.20.1;
+> **json5** 0.9.5;
+> **pandas** 1.2.4;
+> **jupyterlab** 3.0.14
+>
 
 ## The Workflow
 
@@ -229,17 +233,17 @@ process <- function(raw_df) {
 }
 ```
 
-## 分析
+## 数据分析
 
 数据建模和分析是传统上受重视的技术. 其主要内容[已经](#ana)详述，这里不再赘述. 对各个国家分别进行的分析结果存储于本项目的`results`（健康数据）和`results_invest`（投资数据）文件夹中. 其中，`sens.csv`描述了对测试进行安慰剂检验(placebo test)的情况，`p.noeff.csv`描述了测试的P值，`ci.csv`描述了结果的置信区间，`pdf`文件绘制出了按国家分类的置信区间的情况.
 
-## 可视化
+## 数据可视化
 
 本节说明项目中所用到的可视化相关工具、组件、流程。
 
 ### 可视化工具
 
-项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于(Apache Echarts)[@LI2018136]的Pyecharts。
+项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于Apache Echarts[@LI2018136]的Pyecharts。
 
 我们主要做了如下几个可视化工作：
 
@@ -333,11 +337,9 @@ for year in range(2003, 2019+1):                      # 循环添加不同年份
 tl.render("./out/vis.html") # 生成临时文件
 ```
 
-
-
 # 总结
 
-## 结果和建议
+## 分析结果
 
 
 
@@ -396,9 +398,11 @@ cii_csv %>% .[["median(ci.sc)"]] %>% mean()
 
 与预期不符的是，在一带一路的参与国家中，中国对当地的投资相比预期降低（$P<0.10$）的国家共有8个. 中国对当地的投资相比预期升高（$P<0.10$）的国家共有1个. 平均而言，参与一带一路反而额外降低中国对当地的投资的对数约0.40.
 
-根据常识，投资($Y$)对经济发展水平($Z$)的平均因果作用是正的，而经济发展水平($Z$)对健康水平($W$)的平均因果作用也是正的. 因此，根据我们的模型，在相同的经济发展水平下，参与一带一路能够相比预期增加沿线国家的国民健康水平，或者狭义来说，降低婴儿死亡率. 进一步说，一带一路对沿线国家经济以外的影响，还有待更深的评估.
+根据常识，投资($Y$)对经济发展水平($Z$)的平均因果作用是正的，而经济发展水平($Z$)对健康水平($W$)的平均因果作用也是正的. 因此，根据我们的模型，在相同的经济发展水平下，参与一带一路能够相比预期增加沿线国家的国民健康水平，或者狭义来说，降低婴儿死亡率. 从这一方面来看，一带一路对沿线国家经济以外的影响，还有待更深的评估.
 
-## 展望
+## 不足和展望
 
-# 参考文献
+我们的报告最显著的不足之处是将不同国家的结论组合的方式显得过于随意，仅仅是计算每个国家的效应然后求平均，没有考虑到国家和国家的权重问题. 类似地，在计算投资额时，可以考虑除去国家的经济总量，以反映中国投资占比占该国家GDP的比例. 进一步地，一组国家总效应的置信区间并不必然是分别的效应的置信区间的函数. 然而，进一步研究这个问题需要更多的数学细节，并超过了本项目的范围.
+
+# 参考文献 {-}
 

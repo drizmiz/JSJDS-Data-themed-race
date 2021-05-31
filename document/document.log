@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  1 JUN 2021 01:41
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  1 JUN 2021 01:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1035,7 +1035,7 @@ File: resources/DAG.pdf Graphic file (type pdf)
 LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/m/sl' in size <10.5393
 7> not available
 (Font)              Font shape `TU/FandolSong-Regular(0)/m/it' tried instead on
- input line 168.
+ input line 179.
 [2]
 File: resources/Missing data.pdf Graphic file (type pdf)
 <use resources/Missing data.pdf>
@@ -1050,7 +1050,7 @@ Package fontspec Info: FandolFang-Regular scale = 0.9410453776731103.
 Package fontspec Info: FandolFang-Regular scale = 0.9410453776731103.
 
 LaTeX Font Info:    Font shape `TU/FiraMono(0)/m/n' will be
-(Font)              scaled to size 8.61952pt on input line 189.
+(Font)              scaled to size 8.61952pt on input line 200.
 Font mapping `tex-ansi.tec' for font `Fira Mono Regular' not found.
 
 Package fontspec Info: Font family 'FandolFang-Regular(0)' created for font
@@ -1069,31 +1069,24 @@ nguage=dflt;mapping=tex-text;"
 [3] [4]
 
 LaTeX Font Warning: Font shape `TU/FiraMono(0)/m/it' undefined
-(Font)              using `TU/FiraMono(0)/m/n' instead on input line 274.
+(Font)              using `TU/FiraMono(0)/m/n' instead on input line 285.
 
 LaTeX Font Info:    Font shape `TU/FiraMono(0)/b/n' will be
-(Font)              scaled to size 8.60312pt on input line 275.
+(Font)              scaled to size 8.60312pt on input line 286.
 Font mapping `tex-ansi.tec' for font `Fira Mono Medium' not found.
 LaTeX Font Info:    Font shape `TU/FiraMono(0)/m/it' will be
-(Font)              scaled to size 8.61952pt on input line 279.
+(Font)              scaled to size 8.61952pt on input line 290.
 Font mapping `tex-ansi.tec' for font `Fira Mono Regular' not found.
 LaTeX Font Info:    Font shape `TU/FandolFang-Regular(0)/m/n' will be
-(Font)              scaled to size 9.91795pt on input line 305.
+(Font)              scaled to size 9.91795pt on input line 316.
 [5]
 File: resources/workflow.png Graphic file (type bmp)
 <resources/workflow.png>
-[6] [7] [8]
-Underfull \hbox (badness 1735) in paragraph at lines 479--480
-[]\TU/FiraMono(0)/m/it/10.53937 ./visualization/out/\TU/FandolSong-Regular(0)/m
-/n/10.53937 是 可 视 化 的 文 件，|  成 品 文 件 名 已 经 更 改，|  相 对 清 楚。|  注 意 其 中 \TU/Fandol
-Fang-Regular(0)/m/n/10.53937 外 商 直 接 投 资 情 况\TU/FiraMono(0)/m/it/10.53937 -
- []
-
-[9]
+[6] [7] [8] [9]
 
 LaTeX Font Warning: Font shape `TU/FandolFang-Regular(0)/m/it' undefined
 (Font)              using `TU/FandolFang-Regular(0)/m/n' instead on input line 
-488.
+511.
 
 [10] [11] [12] (./document.aux)
 
@@ -1103,10 +1096,10 @@ Package rerunfilecheck Info: File `document.out' has not changed.
 (rerunfilecheck)             Checksum: E387C012B4D1C84A7CB6A25E99BB68E1;1369.
  ) 
 Here is how much of TeX's memory you used:
- 19848 strings out of 478682
- 399904 string characters out of 5862550
+ 19828 strings out of 478682
+ 398312 string characters out of 5862550
  840358 words of memory out of 5000000
- 39607 multiletter control sequences out of 15000+600000
+ 39587 multiletter control sequences out of 15000+600000
  412051 words of font info for 121 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  90i,11n,123p,514b,898s stack positions out of 5000i,500n,10000p,200000b,80000s

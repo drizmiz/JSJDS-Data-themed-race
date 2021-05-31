@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  31 MAY 2021 16:21
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.5.29)  31 MAY 2021 19:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1087,7 +1087,17 @@ LaTeX Font Warning: Font shape `TU/FandolFang-Regular(0)/m/it' undefined
 Underfull \vbox (badness 10000) detected at line 326
  []
 
-[5] [6] [7] [8] (./document.aux)
+[5] [6] [7] [8]
+Underfull \hbox (badness 1735) in paragraph at lines 432--433
+[]\TU/FiraMono(0)/m/n/10.53937 ./visualization/out/\TU/FandolSong-Regular(0)/m/
+n/10.53937 是 可 视 化 的 文 件，|  成 品 文 件 名 已 经 更 改，|  相 对 清 楚。|  注 意 其 中 \TU/FandolF
+ang-Regular(0)/m/n/10.53937 外 商 直 接 投 资 情 况\TU/FiraMono(0)/m/n/10.53937 -
+ []
+
+LaTeX Font Info:    Font shape `TU/FiraMono(0)/m/it' will be
+(Font)              scaled to size 8.61952pt on input line 441.
+Font mapping `tex-ansi.tec' for font `Fira Mono Regular' not found.
+[9] [10] (./document.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -1095,12 +1105,12 @@ Package rerunfilecheck Info: File `document.out' has not changed.
 (rerunfilecheck)             Checksum: 5749ADAFA580EDD04301DC3F0C80A34D;1382.
  ) 
 Here is how much of TeX's memory you used:
- 19689 strings out of 478682
- 387646 string characters out of 5862550
- 833145 words of memory out of 5000000
- 39451 multiletter control sequences out of 15000+600000
+ 19791 strings out of 478682
+ 395518 string characters out of 5862550
+ 839273 words of memory out of 5000000
+ 39553 multiletter control sequences out of 15000+600000
  412035 words of font info for 119 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  90i,11n,123p,496b,454s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on document.pdf (8 pages).
+Output written on document.pdf (10 pages).

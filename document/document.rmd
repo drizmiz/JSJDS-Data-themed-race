@@ -78,7 +78,7 @@ include_graphics("resources/DAG.pdf")
 
 此图在R语言中，用**ggdag**[@citation_ggdag]生成. 是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
 
-
+在该模型中，我们假定
 
 
 ## 分析技术
@@ -87,11 +87,78 @@ include_graphics("resources/DAG.pdf")
 include_graphics("resources/Missing data.pdf")
 ```
 
-首先注意到数据集中存在许多缺失数据[@citation_VIM]，使用linear regression with bootstrap进行缺失数据填补.[@citation_mice]
+首先注意到数据集中存在许多缺失数据[@citation_VIM].
 
-然后我们利用两种方法分析其
+我们利用两种方法分析.
 
-Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
+### 二重差分法
+
+二重差分法(Difference-in-Differences)是一种经典技术. 它运用以下模型[@NBERw22791].
+
+$$
+P_{t}^{N}=\mu+\frac{1}{J} \sum_{j=2}^{J+1} Y_{j t}^{N}
+$$
+
+并用如下公式来估计.
+
+$$
+\hat{P}_{t}^{N}=\frac{1}{T} \sum_{s=1}^{T}\left(Y_{1 s}^{N}-\frac{1}{J} \sum_{j=2}^{J+1} Y_{j s}^{N}\right)+\frac{1}{J} \sum_{j=2}^{J+1} Y_{j t}^{N}
+$$
+
+### 合成控制法
+
+合成控制法(Synthetic Control)是另一种经典技术. 它运用以下模型[@sc_method].
+
+$$
+P_{t}^{N}=\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}, \text { where } w \geq 0 \text { and } \sum_{j=2}^{J+1} w_{j}=1 \text { . (3) }
+$$
+
+为了识别权重$w$，我们需要一些假设. 我们假定结构冲击项$u_{t}$在同一时段内互不相关，即：
+
+$$
+E\left(u_{i} Y_{j t}^{N}\right)=0 \text { for } 2 \leq j \leq J+1 .
+$$
+
+于是就有$\hat{P}_{t}^{N}=\sum_{j=2}^{J+1} \hat{w}_{j} Y_{j t}^{N} .$
+
+而$w$的估计
+
+$$
+\hat{w}=\arg \min _{w} \sum_{i=1}^{T}\left(Y_{1 t}^{N}-\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}\right)^{2}\text{s.t.}\mathrm{w}\geq 0\text{and}\sum_{\mathrm{j}=2}^{\mathrm{J}+1} \mathrm{w}_{\mathrm{j}}=1 .
+$$
+
+此后，我们利用Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法分析其置信区间.
+
+### 缺失数据填补
+
+我们的数据集，正和许多类似的真实世界数据集一样，存在着许多缺失数据`NA`. 缺失数据的处理方式不外乎删除或填补.
+
+- 对于我们的investment数据集，其缺失普遍存在，故我们采用填补的方法.
+- 对于本次大赛提供的世界健康数据集，其缺失更有规律，即对于任意一个国家，缺失一个时间点的数据意味着缺失此前所有数据. 恰当地选择时间范围，再删去个别几个缺失较大的国家[^cty]，就在可以避免填补的同时保留大部分数据. 因此，我们选择删去.
+
+[^cty]: 这些国家往往那时才成立，例如从母国中分裂出.
+
+对于前者，我们调用R包**mice**[@citation_mice]，采用linear regression with bootstrap的方法进行缺失数据填补. 首先，对数据进行bootstrap重抽样，进行线性回归插值，然后计算均值得到最后结果. 其中，多元线性回归的步骤采用Schafer的算法[@schafer_1997]，其步骤如下：
+
+1. Calculate the cross-product matrix $S=X_{o b s}^{\prime} X_{o b s}$
+
+2. Calculate $V=(S+\operatorname{diag}(S) \kappa)^{-1}$, with some small ridge parameter $\kappa$.
+
+3. Calculate regression weights $\hat{\beta}=V X_{\text {obs }}^{\prime} y_{\text {obs }}$.
+
+4. Draw a random variable $\dot{g} \sim \chi_{\nu}^{2}$ with $\nu=n_{1}-q$.
+
+5. Calculate $\dot{\sigma}^{2}=\left(y_{o b s}-X_{o b s} \hat{\beta}\right)^{\prime}\left(y_{o b s}-X_{o b s} \hat{\beta}\right) / \dot{g} .$
+
+6. Draw $q$ independent $N(0,1)$ variates in vector $\dot{z}_{1}$.
+
+7. Calculate $V^{1 / 2}$ by Cholesky decomposition.
+
+8. Calculate $\dot{\beta}=\hat{\beta}+\dot{\sigma} \dot{z}_{1} V^{1 / 2}$.
+
+9. Draw $n_{0}$ independent $N(0,1)$ variates in vector $\dot{z}_{2}$.
+
+10. Calculate the $n_{0}$ values $y_{i m p}=X_{m i s} \dot{\beta}+\dot{z}_{2} \dot{\sigma}$.
 
 ## 程序技术
 
@@ -119,7 +186,7 @@ repli <- function(fun) {
 
 ## The Workflow
 
-根据_R for Data Science_[@Wickham2017R]，
+根据 _R for Data Science_[@Wickham2017R]，
 
 ![The Data Science Workflow[^1]](resources/workflow.png)
 
@@ -127,11 +194,11 @@ repli <- function(fun) {
 
 ## Import
 
-国际贸易数据（`/data/investment`）下载自CEIC数据库。我们引用CEIC全球数据库中“实际利用的外国资本：按地区分类”和“对外直接投资：国别”两个数据集，并经过清洗得到可供分析的数据集。
+国际贸易数据（/data/investment）下载自CEIC数据库。我们引用CEIC全球数据库中“实际利用的外国资本：按地区分类”和“对外直接投资：国别”两个数据集，逐条下载了中国在利用其他国家资本量（月度数据），和中国对其他国家的直接投资（月度数据）。CEIC数据库覆盖的时间范围为1985年12月至2021年4月，每条数据均以月为统计单位，故为了数据的完整性，初步清洗时，以纵轴为月份（自1985年12月至2021年4月），横轴为统计指标（中国利用不同国家的资本，与对不同国家的直接投资），对数据进行了合成与排列。
 
-其中，实际利用的外国资本分为直接投资和其他投资方式。直接投资包括中外合资，合资开发和独资企业，外资参股公司以及共同开发；其他投资方式包括补偿贸易和加工组装。数据来源为国家统计局和中华人民共和国商务部。
+其中，实际利用的外国资本分为直接投资和其他投资方式。直接投资包括中外合资，合资开发和独资企业，外资参股公司以及共同开发；其他投资方式包括补偿贸易和加工组装。数据来源为国家统计局和中华人民共和国商务部。该数据可反应外国对中国的投资。
 
-对外直接投资指中国国内投资者以现金、实物、无形资产等方式在国外及港澳台地区设立、购买国（境）外企业，并以控制该企业的经营管理权为核心的经济活动。数据统计来源为中华人民共和国商务部。
+对外直接投资指中国国内投资者以现金、实物、无形资产等方式在国外及港澳台地区设立、购买国（境）外企业，并以控制该企业的经营管理权为核心的经济活动。数据统计来源为中华人民共和国商务部。该数据可反应中国对外投资。
 
 // TODO - **R. Li**
 

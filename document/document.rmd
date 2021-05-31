@@ -267,9 +267,7 @@ visualization
 │   ├── syno_dict.json
 │   └── world_country.json
 ├── mytool.ipynb
-├── obor_raw_plot
-│   └── ...
-├── wh_raw_plot
+├── raw_plot
 │   └── ...
 ├── out
 │   ├── 五岁以下死亡率.html
@@ -282,7 +280,7 @@ visualization
 
 其中`./visualization/data/`是可视化所用到的数据，不仅包括我们绘图所需的数据，包括对外直接投资`FDI*.csv`、健康相关数据`LE*.csv`和`UFMR*.csv`等，还包括中英对照表`country_ce.json`、以及国家名的同义对照表`syno_dict.json`等工具数据. 
 
-`obor_raw_plot/`和`wh_raw_plot/`两个目录是用R生成的原始数据集变化情况，其中一带一路参与国家以加粗线绘制.
+`raw_plot/`目录是用R生成的原始数据变化情况，其中一带一路参与国家以加粗线绘制.
 
 `mytool.ipynb`为工具和测试用notebook，用于生成工具json和进行原型开发测试. 
 

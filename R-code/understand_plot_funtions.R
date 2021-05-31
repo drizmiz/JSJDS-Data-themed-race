@@ -18,7 +18,7 @@ pdf_plot_raw <- function(directory) {
   graphics.off()
 }
 
-# repli(pdf_plot_raw(directory = "../visualization/wh_raw_plot/"))
+# repli(pdf_plot_raw(directory = "../visualization/raw_plot/?_raw_plot/"))
 
 pdf_plot_confidence_interval_sc <- function(directory) {
   time <- seq(Tact, Tend, 1)

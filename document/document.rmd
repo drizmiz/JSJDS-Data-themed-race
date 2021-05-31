@@ -78,7 +78,7 @@ include_graphics("resources/Missing data.pdf")
 
 [^cty]: 这些国家往往那时才成立，例如从母国中分裂出.
 
-对于前者，我们调用R包**mice**[@citation_mice]，采用linear regression with bootstrap的方法进行缺失数据填补. 首先，对数据进行bootstrap重抽样，进行线性回归插值，然后计算均值得到最后结果. 其中，多元线性回归的步骤采用Schafer的算法[@schafer_1997].
+对于前者，我们调用R包**mice**[@citation_mice]，采用linear regression with bootstrap的方法进行缺失数据填补. 首先，对数据进行bootstrap重抽样[@citation_bs]，然后进行线性回归插值，最终计算得到合成的结果. 其中，多元线性回归采用Schafer的算法[@schafer_1997].
 
 ### 二重差分法
 

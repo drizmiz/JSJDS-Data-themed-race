@@ -7,10 +7,10 @@ library(plotrix)
 library(showtext)
 
 pdf_plot_raw <- function(directory) {
-  pdf(paste0(directory, country_name, "_investment_data_raw.pdf"), pointsize = 14, width = 8.0, height = 6.0)
+  pdf(paste0(directory, country_name, "_data_raw.pdf"), pointsize = 14, width = 8.0, height = 6.0)
   # for Unicode characters like CJK
   showtext_begin()
-  plot(range(time), c(-2, 14), ylab = "Log FDI from China", xlab = "Time", main = "", type = "n")
+  plot(range(time), c(-2, 14), ylab = legend_str, xlab = "Time", main = "", type = "n")
   for (j in 1:dim(Y0go)[2]) lines(time, Y0go[, j], col = "darkgrey", lwd = 0.5, lty = 1)
   lines(time, Y1go, col = "black", lwd = 5)
   abline(v = time[Tact_from_0] + 0.5, col = "darkgrey", lty = 2, lwd = 1.5)
@@ -20,13 +20,13 @@ pdf_plot_raw <- function(directory) {
   graphics.off()
 }
 
-# repli(pdf_plot_raw(directory = "../visualization/obor_raw_plot/"))
+# repli(pdf_plot_raw(directory = "../visualization/wh_raw_plot/"))
 
 pdf_plot_confidence_interval_sc <- function(directory) {
   time <- seq(Tact, Tend, 1)
 
-  pdf(paste0(directory, country_name, "_ci_investment_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
-  plot(vec.ci.sc[, 1], vec.ci.sc[, 2], ylab = "Gap in Log FDI from China", xlab = "Years", main = "",
+  pdf(paste0(directory, country_name, "_ci_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
+  plot(vec.ci.sc[, 1], vec.ci.sc[, 2], ylab = paste0("Gap in ", legend_str), xlab = "Years", main = "",
        col = "black", pch = "eda-doc", xlim = c(Tpre, Tend + 1), ylim = c(-3, 3))
   title("Synthetic Control")
   abline(h = 0, col = "grey", lty = 2, lwd = 2)
@@ -39,8 +39,8 @@ pdf_plot_confidence_interval_sc <- function(directory) {
 pdf_plot_confidence_interval_did <- function(directory) {
   time <- seq(Tact, Tend, 1)
 
-  pdf(paste0(directory, country_name, "_ci_investment_did.pdf"), pointsize = 16, width = 6.0, height = 6.0)
-  plot(vec.ci.did[, 1], vec.ci.did[, 2], ylab = "Gap in Log FDI from China", xlab = "Years", main = "",
+  pdf(paste0(directory, country_name, "_ci_did.pdf"), pointsize = 16, width = 6.0, height = 6.0)
+  plot(vec.ci.did[, 1], vec.ci.did[, 2], ylab = paste0("Gap in ", legend_str), xlab = "Years", main = "",
        col = "black", pch = "eda-doc", xlim = c(Tpre, Tend + 1), ylim = c(-3, 3))
   title("Difference-in-Differences")
   abline(h = 0, col = "grey", lty = 2, lwd = 2)

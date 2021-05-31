@@ -26,7 +26,7 @@ dat2 <- read_csv("../data/world_health/tidy/iMR_tidy_zh.csv")
 dat2 <- dat2 %>%
   mutate(lg = robust_log(infantMortalityRate), .keep = "unused") %>%
   select(-country) %>%
-  filter(国家 %>% is.na() %>% `!`, 年份 >= 2001, 国家 != "苏丹") %>%
+  filter(国家 %>% is.na() %>% `!`, 年份 >= 2003, 年份 <= 2019, 国家 != "苏丹") %>%
   pivot_wider(names_from = "国家", values_from = "lg") %>%
   arrange(年份) %>%
   select(-年份)

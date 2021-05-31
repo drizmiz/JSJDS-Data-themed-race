@@ -22,14 +22,9 @@ monofont: Fira Mono
 
 [^a]: 名拼音序.
 
-# 概要
+# 环境
 
-
-# 前言
-
-## 环境
-
-### R环境
+## R环境
 
 本项目的R部分使用如下环境生成[^dep]：
 
@@ -58,7 +53,7 @@ xfun::session_info(
 )
 ```
 
-### python info
+## python环境
 
 本项目的python部分使用python 3.8.8生成，部分包版本号如下：
 
@@ -81,15 +76,17 @@ include_graphics("resources/DAG.pdf")
 
 此图在R语言中，用**ggdag**[@citation_ggdag]生成. 是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
 
-在该模型中，我们假定
+在该模型中，我们假定一带一路不会以其他方式影响地区的经济发展水平（即不存在$X\rightarrow Y$的线），从而$Y$是一个良好的替代变量.
 
-## 分析技术
+
+## 分析技术 {#ana}
+
+本项目主要利用到以下三种分析技术. 首先注意到数据集中存在许多缺失数据[@citation_VIM]. 缺失数据的删除或填补需要用到一些技术. 分析一带一路的影响，就是要分析某一事件发生后，某一值的变化情况. 该值自身也存在着模型外因素导致的变化趋势，所以我们必须利用某些技术来去除这些因素的影响. 于是，我们运用如
+下所述的双重差分和合成控制两种技术.
 
 ```{r echo = FALSE, warning = FALSE, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
 include_graphics("resources/Missing data.pdf")
 ```
-
-本项目主要利用到以下三种分析技术. 首先注意到数据集中存在许多缺失数据[@citation_VIM]. 缺失数据的删除或填补需要用到一些技术. 分析一带一路的影响，就是要分析某一事件发生后，某一值的变化情况. 该值自身也存在着模型外因素导致的变化趋势，所以我们必须利用某些技术来去除这些因素的影响. 于是，我们运用如下所述的双重差分和合成控制两种技术.
 
 ### 缺失数据填补
 
@@ -144,7 +141,7 @@ $$
 \end{aligned}
 $$
 
-此后，我们利用Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法分析其置信区间.
+此后，我们利用Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法分析P值和置信区间等信息.
 
 ## 程序技术
 
@@ -187,13 +184,19 @@ R采用lazy evaluation，只有在真正用到`fun`的时候才会对其进行�
 
 对外直接投资指中国国内投资者以现金、实物、无形资产等方式在国外及港澳台地区设立、购买国（境）外企业，并以控制该企业的经营管理权为核心的经济活动。数据统计来源为中华人民共和国商务部。该数据可反映中国对外投资。
 
+其他用到的数据集来自世界健康数据集，包括：
+
+- under5MortalityRate.csv
+数据集记录了1962-2019年不同国家5岁以下儿童死亡率（每千人的死亡人数）。我们认为，该指标反应了一国最基础的医疗水平状况。相比预期寿命，该指标更好地将研究标的限制在了基础卫生条件，如洁净水源、疫苗接种、家庭卫生条件等。而对于发展中国家，基础医疗状况和卫生水平的提高，才能最贴切地带来经济发展的动力。故在预期寿命之外，我们还专门将“5岁以下儿童死亡率”作为研究指标。
+
+- infantMortalityRate.csv
+数据集记录了1962-2019年不同国家出生婴儿死亡率（每千人的死亡人数）。我们认为，相比5岁以下儿童死亡率，该指标更准确地反映了一国在生育保障上的医疗和健康水平。
+
 ## 数据清洗
 
-虽然不为人所重视，数据清洗往往是数据分析工作中耗时最久的部分.[@DS50] 不仅如此，数据清洗的目标也往往不被人熟知. 什么数据结构才算是整理好？幸运的是，Hadley Wickham的文章[@tidy-data]向我们提供了一种通俗易懂的解释：每行应该代表一个观察(observation)，每列应该代表一个变量(variable). 根据此种原则，并利用其为刺目的开发的R包**tidyverse**[@tdv]，进行如下的数据清洗.
+虽然不为人所重视，数据清洗往往是数据分析工作中耗时最久的部分.[@DS50] 不仅如此，数据清洗的目标也往往不被人熟知. 什么数据结构才算是整理好？幸运的是，Hadley Wickham的文章[@tidy-data]向我们提供了一种通俗易懂的解释：每行应该代表一个观察(observation)，每列应该代表一个变量(variable). 根据此种原则，并利用其为此目的开发的R包**tidyverse**[@tdv]，进行数据清洗. 其部分步骤如下所示.
 
 ```r
-raw_df <- read_csv("./data/investment/FDI_untidy.csv")
-
 process <- function(raw_df) {
   simplified_df <- raw_df %>%
     filter(X1 %>% str_detect("^\\d")) %>%
@@ -215,113 +218,13 @@ process <- function(raw_df) {
 
   df <- sep_df %>% spread(key = "type", value = "val")
 }
-
-raw_df %>%
-  process() %>%
-  write_csv("./data/investment/FDI_tidy.csv")
-
-cont <- raw_df %>%
-  filter(X1 == "状态") %>%
-  as_vector() %>%
-  .[. == "继续"] %>%
-  names()
-raw_df %>%
-  select(X1, all_of(cont)) %>%
-  process() %>%
-  write_csv("./data/investment/FDI_tidy_cont.csv")
 ```
 
-```r
-raw_df <- read_csv(
-  file = "./data/investment/FDI_tidy_cont.csv",
-  col_types = cols(
-    时间 = col_date(format = "%m/%Y")
-  ),
-  guess_max = 50000
-)
+## 分析
 
-df0 <- raw_df %>%
-  filter(!is.na(国家))
+数据建模和分析是传统上受重视的技术. 其主要内容[已经](#ana)详述，这里不再赘述. 对各个国家分别进行的分析结果存储于本项目的`results`（健康数据）和`results_invest`（投资数据）文件夹中. 其中，`sens.csv`描述了对测试进行安慰剂检验(placebo test)的情况，`p.noeff.csv`描述了测试的P值，`ci.csv`描述了结果的置信区间，`pdf`文件绘制出了按国家分类的置信区间的情况.
 
-# 对外直接投资:非金融类:累计 为一带一路数据所特有
-OBOR_col <- "对外直接投资:非金融类:累计"
-
-df <- df0 %>%
-  filter(国家 != "一带一路" & 国家 != "总计") %>%
-  select(-all_of(OBOR_col))
-
-df <- df %>%
-  filter(month(时间) == 12) %>%
-  mutate(年份 = as.integer(year(时间)), .keep = "unused", .before = 1) %>%
-  filter(年份 >= 2002)
-
-df <- df %>%
-  select(names(df) %>% str_subset(pattern = "投资(和其他)*$", negate = TRUE)) %>%
-  filter(!is.na(`对外直接投资:截至累计`))
-
-df %>% write_csv(file = "./data/investment/FDI_useful.csv")
-
-df1 <- df0 %>%
-  filter(国家 == "一带一路" & !is.na(.[OBOR_col])) %>%
-  select(时间, all_of(OBOR_col)) %>%
-  mutate(
-    年份 = as.integer(year(时间)),
-    月份 = as.integer(month(时间)),
-    .keep = "unused", .before = 1) %>%
-  arrange(年份, 月份)
-
-df1 %>% write_csv(file = "./data/investment/FDI_OBOR.csv")
-```
-
-## Understand
-
-```{r echo = FALSE, eval = FALSE}
-pdf("Missing data.pdf", width = 9, height = 4)
-showtext_begin()
-# plot something
-showtext_end()
-dev.off()
-```
-
-```r
-fdi <- read_csv(
-  file = "./data/investment/FDI_useful.csv",
-  col_types = cols(
-    年份 = col_double(),
-    国家 = col_factor()
-  )
-) %>% unite(col = 国家, 地区, 国家)
-
-country_name <- fdi[["国家"]] %>% unique()
-
-fdi_na <- fdi %>%
-  tidyr::complete(年份, 国家) %>%
-  rename(对外直接投资 = `对外直接投资:截至累计`)
-
-fdi_lg <- fdi_na %>%
-  mutate(lg = log(对外直接投资), .keep = "unused")
-
-fill_a_country <- function(.dt, .cn) {
-  res <- .dt %>%
-    filter(国家 == .cn) %>%
-    mice(method = "norm.boot", m = 1, maxit = 3) %>%
-    complete()
-  if (any(is.na(res$lg))) {
-    non_na <- !(res$lg %>% is.na())
-    res$lg <- res$lg[non_na][1]
-  }
-  return(res)
-}
-
-fdi_filled <- country_name %>% map(~fill_a_country(fdi_lg, .x))
-
-result <- fdi_filled %>%
-  reduce(rbind) %>%
-  mutate(对外直接投资 = exp(lg), .keep = "unused") %>%
-  separate(col = 国家, into = c("地区", "国家"), sep = "_")
-```
-
-## Communicate
+## 可视化
 
 本节说明项目中所用到的可视化相关工具、组件、流程。
 
@@ -354,6 +257,8 @@ visualization
 │   └── world_country.json
 ├── mytool.ipynb
 ├── obor_raw_plot
+│   └── ...
+├── wh_raw_plot
 │   └── ...
 ├── out
 │   ├── 五岁以下死亡率.html

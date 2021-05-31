@@ -22,7 +22,7 @@ pdf_plot_raw <- function(directory) {
 
 # repli(pdf_plot_raw(directory = "../visualization/obor_raw_plot/"))
 
-pdf_plot_confidence_interval <- function(directory) {
+pdf_plot_confidence_interval_sc <- function(directory) {
   time <- seq(Tact, Tend, 1)
 
   pdf(paste0(directory, country_name, "_ci_investment_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
@@ -34,6 +34,10 @@ pdf_plot_confidence_interval <- function(directory) {
   legend(Tpre, 2, legend = "90% Confidence Interval", col = "black", cex = 1, lty = 1, lwd = 2.25, bty = ("n"))
   legend(Tpre + 0.3, 2, legend = "", cex = 1, col = "black", pch = 16, bty = ("n"))
   graphics.off()
+}
+
+pdf_plot_confidence_interval_did <- function(directory) {
+  time <- seq(Tact, Tend, 1)
 
   pdf(paste0(directory, country_name, "_ci_investment_did.pdf"), pointsize = 16, width = 6.0, height = 6.0)
   plot(vec.ci.did[, 1], vec.ci.did[, 2], ylab = "Gap in Log FDI from China", xlab = "Years", main = "",
@@ -44,4 +48,9 @@ pdf_plot_confidence_interval <- function(directory) {
   legend(Tpre, 2, legend = "90% Confidence Interval", col = "black", cex = 1, lty = 1, lwd = 2.25, bty = ("n"))
   legend(Tpre + 0.3, 2, legend = "", cex = 1, col = "black", pch = 16, bty = ("n"))
   graphics.off()
+}
+
+pdf_plot_confidence_interval <- function(directory) {
+  pdf_plot_confidence_interval_did()
+  pdf_plot_confidence_interval_sc()
 }

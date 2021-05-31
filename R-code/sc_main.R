@@ -10,17 +10,9 @@ source("sc_functions.R")
 source("sc_head.R")
 source("plot.R")
 
-### Test head
+directory <- "../results/"
 
-#country_name <<- country_list[1]
-#idx <- country_name %>% match(names(fdi_data))
-
-#Y1go <<- as.matrix(fdi_data[, idx])
-#Y0go <<- as.matrix(fdi_data[, (seq_along(fdi_data))[-idx]])
-
-directory <- "./test/bundle/"
-
-sens <- p.noeff <- ci <- tibble()
+sens <- p.noeff <- c.i <- tibble()
 
 placebo_specification_test <- function() {
   sens.sc.mb <- sens.did.mb <- sens.sc.all <- sens.did.all <- matrix(NA, 3, 1)
@@ -61,18 +53,18 @@ p_calculator <- function() {
 ci_calculator <- function() {
   alpha <- 0.1
   grid <- seq(-3, 2, 0.02)
-  vec.ci.sc <- vec.ci.did <- m.ci.sc <- m.ci.did <- NULL
+  vec.ci.sc <<- vec.ci.did <<- m.ci.sc <<- m.ci.did <<- NULL
 
   for (t in 1:T1go) {
     indices <- c(1:Tact_from_0, Tact_from_0 + t)
     Y1ci <- Y1go[indices]
     Y0ci <- Y0go[indices,]
     ci.sc <- ci(Y1ci, Y0ci, "sc", alpha, grid)
-    vec.ci.sc <- rbind(vec.ci.sc, cbind((t + Tpre), ci.sc))
-    m.ci.sc <- cbind(m.ci.sc, mean(ci.sc))
+    vec.ci.sc <<- rbind(vec.ci.sc, cbind((t + Tpre), ci.sc))
+    m.ci.sc <<- cbind(m.ci.sc, mean(ci.sc))
     ci.did <- ci(Y1ci, Y0ci, "did", alpha, grid)
-    vec.ci.did <- rbind(vec.ci.did, cbind((t + Tpre), ci.did))
-    m.ci.did <- cbind(m.ci.did, mean(ci.did))
+    vec.ci.did <<- rbind(vec.ci.did, cbind((t + Tpre), ci.did))
+    m.ci.did <<- cbind(m.ci.did, mean(ci.did))
   }
 
   tb_sc <- vec.ci.sc %>%
@@ -88,8 +80,8 @@ ci_calculator <- function() {
   tb <- left_join(tb_sc, tb_did) %>%
     mutate(国家 = country_name, .after = 年份)
 
-  ci <<- ci %>% bind_rows(tb)
-  #pdf_plot_confidence_interval(directory = directory)
+  c.i <<- c.i %>% bind_rows(tb)
+  pdf_plot_confidence_interval_did(directory = directory)
 }
 
 repli(placebo_specification_test())
@@ -99,4 +91,4 @@ repli(p_calculator())
 p.noeff %>% write_csv(paste0(directory, "p.noeff.csv"))
 
 repli(ci_calculator())
-p.noeff %>% write_csv(paste0(directory, "ci.csv"))
+c.i %>% write_csv(paste0(directory, "ci.csv"))

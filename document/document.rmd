@@ -13,6 +13,7 @@ output:
     toc: yes
     includes:
       in_header: "resources/preamble.tex"
+    keep_tex: yes
 bibliography: resources/citation.bib
 csl: resources/cn_gb.csl
 geometry: left=2cm, right=2cm, top=2.5cm, bottom=2.5cm
@@ -21,9 +22,12 @@ monofont: Fira Mono
 
 [^a]: 名拼音序.
 
-# 前言
+# SUMMARY
 
 ## 概要
+
+
+# 前言
 
 ## 环境
 
@@ -53,7 +57,14 @@ xfun::session_info(
 
 ### python info
 
-// TODO
+本项目的python部分使用python 3.8.8生成，部分包版本号如下：
+
+> **conda** 4.10.1;
+> **pyecharts** 1.9.0;
+> **numpy** 1.20.1;
+> **json5** 0.9.5;
+> **pandas** 1.2.4;
+> **jupyterlab** 3.0.14
 
 # 主要结果
 
@@ -65,32 +76,62 @@ xfun::session_info(
 include_graphics("resources/DAG.pdf")
 ```
 
-此图[@citation_ggdag]是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
+此图在R语言中，用**ggdag**[@citation_ggdag]生成. 是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
+
+
+
+
+## 分析技术
 
 ```{r echo = FALSE, warning = FALSE, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
 include_graphics("resources/Missing data.pdf")
 ```
-## 分析
-
-我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
 
 首先注意到数据集中存在许多缺失数据[@citation_VIM]，使用linear regression with bootstrap进行缺失数据填补.[@citation_mice]
 
-## 程序
+然后我们利用两种方法分析其
+
+Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
+
+## 程序技术
 
 ### Non-standard evaluation in R
+
+本项目使用了一种在R中非常重要的技术，即Non-standard evaluation，又称lazy evaluation.[@wickham_2019]
+
+具体来说，让我们看一段重要代码：
+```r
+### Using lazy evaluation to replicate a func along country list
+repli <- function(fun) {
+  ex <- substitute(fun)
+
+  for (i in seq_along(country_list)) {
+    # ...
+    eval(ex, envir = globalenv())
+  }
+}
+```
+
+
+其中的`substitute`
 
 # 具体流程
 
 ## The Workflow
 
+根据_R for Data Science_[@Wickham2017R]，
+
 ![The Data Science Workflow[^1]](resources/workflow.png)
 
-[^1]: This picture is from _R for Data Science_[@Wickham2017R], released under [CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/).
+[^1]: This picture is from _R for Data Science_, released under [CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/).
 
 ## Import
 
-// 需要数据集的完整描述和获取方式
+国际贸易数据（`/data/investment`）下载自CEIC数据库。我们引用CEIC全球数据库中“实际利用的外国资本：按地区分类”和“对外直接投资：国别”两个数据集，并经过清洗得到可供分析的数据集。
+
+其中，实际利用的外国资本分为直接投资和其他投资方式。直接投资包括中外合资，合资开发和独资企业，外资参股公司以及共同开发；其他投资方式包括补偿贸易和加工组装。数据来源为国家统计局和中华人民共和国商务部。
+
+对外直接投资指中国国内投资者以现金、实物、无形资产等方式在国外及港澳台地区设立、购买国（境）外企业，并以控制该企业的经营管理权为核心的经济活动。数据统计来源为中华人民共和国商务部。
 
 // TODO - **R. Li**
 
@@ -232,7 +273,99 @@ result %>% write_csv("./data/investment/FDI_filled.csv")
 
 ## Communicate
 
-// TODO - H. Fan
+本节说明项目中所用到的可视化相关工具、组件、流程。
+
+### 可视化工具
+
+项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于(Apache Echarts)[@LI2018136]的Pyecharts。
+
+我们主要做了如下几个可视化工作：
+
+- 将2003到2019年的中国对外直接投资总额表示在地图上
+
+- 将世界健康数据集中预期寿命和5岁以下死亡率分性别表示在图中
+
+我们从图中可以定性地看出中国外企对于一带一路沿线国家的投入，以及相应国家的经济水平、生活水平的优化。
+
+### 文件结构
+
+可视化相关的脚本以及输出结果全部储存在`./visualization`中。
+
+```
+visualization
+├── README.md
+├── data
+│   ├── FDI_filled_m.csv
+│   ├── FDI_useful.csv
+│   ├── LE.csv
+│   ├── UFMR_m.csv
+│   ├── country_ce.json
+│   ├── syno_dict.json
+│   └── world_country.json
+├── mytool.ipynb
+├── obor_raw_plot
+│   └── ...
+├── out
+│   ├── 五岁以下死亡率.html
+│   ├── 外商直接投资情况-filled.html
+│   ├── 外商直接投资情况.html
+│   └── 预期寿命.html
+├── FDI.py
+└── world_health.ipynb
+```
+
+其中`./visualization/data/`是可视化所用到的数据，不仅包括我们绘图所需的数据，包括对外直接投资`FDI*.csv`、健康相关数据`LE*.csv`和`UFMR*.csv`等，还包括中英对照表`country_ce.json`、以及国家名的同义对照表`syno_dict.json`等工具数据。
+
+`mytool.ipynb`为工具和测试用notebook，用于生成工具json和进行原型开发测试。
+
+`FDI.py`为对外直接投资可视化脚本，出于易用性，其中`render()`函数中给出的文件名，在得到成品文件后稍后手动更改为中文。
+
+`world_health.ipynb`为世界卫生健康相关数据可视化脚本，前两个cell分别用于绘制世界国家预期寿命和5岁以下死亡率，第三个cell尝试将不同的性别绘制在同一张图中，但是由于timeline和gender两个尺度只能分开调整，所以在时间纵向对比时并不方便，我们将结果绘制为三个图构成的Page Echarts图。
+
+`./visualization/out/`是可视化的文件，成品文件名已经更改，相对清楚。注意其中`外商直接投资情况-filled.html`为利用随机森林算法填充部分缺失数据之后的FDI图像。
+
+### 流程
+
+以FDI（对外直接投资）为例，我们讲述项目中使用的pyecharts可视化方法，相对其他几个可视化工作，其中使用了对数化、相对复杂，故说明后其余同理。
+
+```python
+import pandas as pd                                   # 数据分析组件
+import json                                           # 用于导入工具json
+from pyecharts import options as opts                 # 用于调整pyecharts图的属性
+from pyecharts.charts import Timeline, Map            # 选取pyecharts基本类型
+from pyecharts.globals import ThemeType               # 选取pyecharts主题
+import numpy as np                                    # python数值计算工具
+tl = Timeline(init_opts=opts.InitOpts(
+    theme=ThemeType.INFOGRAPHIC,
+    bg_color='white',
+    page_title='外商直接投资情况'
+))                                                    # 生成timeline图结构
+with open("./data/country_ce.json", 'r', encoding='utf-8') as f:
+    ce_dict = json.load(f)                            # 导入国家名称中英文对照表
+
+df = pd.read_csv('./FDI_filled_m.csv')                # 生成dataframe
+df.iloc[:, 3] = df.iloc[:, 3].apply(np.log1p)         # 将数值列对数化
+for year in range(2003, 2019+1):                      # 循环添加不同年份的数据到timeline图中
+    map = (
+        Map()                                         # 生成一个年份的地图
+        .add(df.columns.tolist()[-1]+"（对数值，原单位：百万美元）",# 设定图层名
+             [[ce_dict[row['国家']], row[3]]          # 读入数据，使用dataframe方法进行筛选
+                 for _, row in df[df.iloc[:, 0] == year].iterrows()],
+             maptype="world",                         # 设定为世界地图
+             is_map_symbol_show=False,                # 不描点
+             )
+        .set_series_opts(label_opts=opts.LabelOpts(is_show=False)) # 在地图中不显示对应国家的数值
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title=f"{year}年外商直接投资情况"), #设定当前页的标题
+            visualmap_opts=opts.VisualMapOpts(
+                max_=df[df.iloc[:, 0] == year].iloc[:, 3].max()),    # 重设图例范围
+            toolbox_opts=opts.ToolboxOpts(),                         # 打开工具箱组件，便于后续使用鼠标调节
+
+        )
+    )
+    tl.add(map, f"{year}年") # 将当前图层加入timeline结构中
+tl.render("./out/vis.html") # 生成临时文件
+```
 
 # 总结
 

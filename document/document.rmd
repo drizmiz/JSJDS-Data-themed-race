@@ -13,7 +13,6 @@ output:
     toc: yes
     includes:
       in_header: "resources/preamble.tex"
-    keep_md: yes
 bibliography: resources/citation.bib
 csl: resources/cn_gb.csl
 geometry: left=2cm, right=2cm, top=2.5cm, bottom=2.5cm
@@ -162,8 +161,8 @@ R采用lazy evaluation，只有在真正用到`fun`的时候才会对其进行�
 xfun::session_info(
   packages = c(
     "readr", "tidyr", "stringr", "dplyr", "purrr",
-    "tidyverse", "lubridate", "mice",
-    "ggplot2", "ggdag", "showtext", "VIM"
+    "tidyverse", "ggplot2", "lubridate", "mice",
+    "ggdag", "showtext", "VIM", "plotrix"
   ), dependencies = FALSE
 )
 ```
@@ -234,7 +233,7 @@ process <- function(raw_df) {
 
 ## 数据分析
 
-数据建模和分析是传统上受重视的技术. 其主要内容[已经](#ana)详述，这里不再赘述. 对各个国家分别进行的分析结果存储于本项目的`results`（健康数据）和`results_invest`（投资数据）文件夹中. 其中，`sens.csv`描述了对测试进行安慰剂检验(placebo test)的情况，`p.noeff.csv`描述了测试的P值，`ci.csv`描述了结果的置信区间，`pdf`文件绘制出了按国家分类的置信区间的情况.
+数据建模和分析是传统上受重视的技术. 其主要内容[已经](#ana)详述，这里不再赘述. 对各个国家分别进行的分析结果存储于本项目`results`文件夹下的`results_IMR`（婴儿死亡率数据）和`results_invest`（投资数据）文件夹中. 其中，`sens.csv`描述了对测试进行安慰剂检验(placebo test)的情况，`p.noeff.csv`描述了测试的P值，`ci.csv`描述了结果的置信区间，`pdf`文件绘制出了按国家分类的置信区间的情况.
 
 ## 数据可视化
 

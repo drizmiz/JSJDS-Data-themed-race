@@ -1,6 +1,8 @@
 # Created by: drizzle
 # Created on: 2021/5/31
 
+source("understand_plot_funtions.R")
+
 # Difference-in-differences
 did <- function(Y1, Y0) {
   u.hat <- Y1 - mean(Y1 - rowMeans(Y0)) - rowMeans(Y0)

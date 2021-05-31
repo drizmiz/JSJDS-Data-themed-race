@@ -6,11 +6,8 @@ library(limSolve)
 # for reproducibility
 set.seed(seed = 0)
 
-source("sc_functions.R")
-source("sc_head.R")
-source("plot.R")
-
-directory <- "../results/"
+source("understand_functions.R")
+source("understand_preprocess.R")
 
 sens <- p.noeff <- c.i <- tibble()
 

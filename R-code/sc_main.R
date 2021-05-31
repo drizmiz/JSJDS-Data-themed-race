@@ -35,39 +35,32 @@ Y0pre <- Y0go[1:T0go,]
 perm <- 200
 
 for (t in 1:3) {
-  sens.sc.mb[t, 1] <- moving.block.q(Y1pre, Y0pre, (T0go - t), t, "sc", q_norm)
+  sens.sc.mb[t, 1] <- moving_block_q(Y1pre, Y0pre, (T0go - t), t, "sc", q_norm)
   sens.sc.all[t, 1] <- all.q(Y1pre, Y0pre, (T0go - t), t, "sc", perm, q_norm)
-  sens.did.mb[t, 1] <- moving.block.q(Y1pre, Y0pre, (T0go - t), t, "did", q_norm)
+  sens.did.mb[t, 1] <- moving_block_q(Y1pre, Y0pre, (T0go - t), t, "did", q_norm)
   sens.did.all[t, 1] <- all.q(Y1pre, Y0pre, (T0go - t), t, "did", perm, q_norm)
 }
 
-xtable(cbind(sens.did.mb[, 1], sens.sc.mb[, 1], sens.did.all[, 1], sens.sc.all[, 1]))
-
-### Residual plots pre-treatment period
-
-r.pre.sc <- sc(Y1pre, Y0pre)
-
-u.hat.go.pre.did <- did(Y1pre, Y0pre)
-u.hat.go.pre.sc <- r.pre.sc$u.hat
-
-pdf_plot2("test/our_graphics/")
+tibble(sens.did.mb[, 1], sens.sc.mb[, 1], sens.did.all[, 1], sens.sc.all[, 1]) %>%
+  write_csv("./test/sens.csv")
 
 ### No effect
 
-perm <- 20
+perm <- 1000
 
-p.noeff.did.mb <- moving.block.q(Y1go, Y0go, T0go, T1go, "did", q_norm)
-p.noeff.sc.mb <- moving.block.q(Y1go, Y0go, T0go, T1go, "sc", q_norm)
+p.noeff.did.mb <- moving_block_q(Y1go, Y0go, T0go, T1go, "did", q_norm)
+p.noeff.sc.mb <- moving_block_q(Y1go, Y0go, T0go, T1go, "sc", q_norm)
 
 p.noeff.did.all <- all.q(Y1go, Y0go, T0go, T1go, "did", perm, q_norm)
 p.noeff.sc.all <- all.q(Y1go, Y0go, T0go, T1go, "sc", perm, q_norm)
 
-xtable(cbind(p.noeff.did.mb, p.noeff.sc.mb, p.noeff.did.all, p.noeff.sc.all))
+tibble(p.noeff.did.mb, p.noeff.sc.mb, p.noeff.did.all, p.noeff.sc.all) %>%
+  write_csv("./test/p.noeff.csv")
 
 ### Pointwise CI
 
 alpha <- 0.1
-grid <- seq(-5, 3, 0.01)
+grid <- seq(-3, 2, 0.02)
 
 vec.ci.sc <- vec.ci.did <- m.ci.sc <- m.ci.did <- NULL
 
@@ -85,4 +78,4 @@ for (t in 1:T1go) {
 
 time <- seq(Tobor, Tend, 1)
 
-pdf_plot3("test/our_graphics/")
+pdf_plot_confidence_interval("test/our_graphics/")

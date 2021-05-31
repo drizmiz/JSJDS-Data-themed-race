@@ -3,6 +3,7 @@
 
 # source("sc_head.R")
 
+library(plotrix)
 library(showtext)
 
 pdf_plot_raw <- function(directory) {
@@ -12,7 +13,7 @@ pdf_plot_raw <- function(directory) {
   plot(range(time), c(-2, 14), ylab = "Log FDI from China", xlab = "Time", main = "", type = "n")
   for (j in 1:dim(Y0go)[2]) lines(time, Y0go[, j], col = "darkgrey", lwd = 0.5, lty = 1)
   lines(time, Y1go, col = "black", lwd = 5)
-  abline(v = time[T0go] + 0.5, col = "darkgrey", lty = 2, lwd = 1.5)
+  abline(v = time[Tact_from_0] + 0.5, col = "darkgrey", lty = 2, lwd = 1.5)
   legend("topleft", legend = c("其他国家", country_name), seg.len = 2, col = c("darkgrey", "black"),
          fill = NA, border = NA, lty = c(1, 1), lwd = c(0.5, 5), merge = T, bty = "n")
   showtext_end()
@@ -22,6 +23,8 @@ pdf_plot_raw <- function(directory) {
 # repli(pdf_plot_raw(directory = "../visualization/obor_raw_plot/"))
 
 pdf_plot_confidence_interval <- function(directory) {
+  time <- seq(Tact, Tend, 1)
+
   pdf(paste0(directory, country_name, "_ci_investment_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
   plot(vec.ci.sc[, 1], vec.ci.sc[, 2], ylab = "Gap in Log FDI from China", xlab = "Years", main = "",
        col = "black", pch = "eda-doc", xlim = c(Tpre, Tend + 1), ylim = c(-3, 3))

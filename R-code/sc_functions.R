@@ -47,7 +47,7 @@ moving_block_q <- function(Y1, Y0, T0, T1, M, q) {
 }
 
 # All/iid permutations (use random subsample of all permutations)
-all.q <- function(Y1, Y0, T0, T1, M, nperm, q) {
+all_q <- function(Y1, Y0, T0, T1, M, nperm, q) {
   T01 <- T0 + T1
   if (M == "sc") {
     u.hat <- sc(Y1, Y0)$u.hat

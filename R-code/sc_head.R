@@ -8,17 +8,22 @@ source("sc_prepare.R")
 # Time periods
 
 T0 <- 2003
-Tobor <- 2013
-Tpre <- Tobor - 1
+Tact <- 2013
+Tpre <- Tact - 1
 Tend <- 2019
 
-T0go <- Tobor - T0    # 10
+Tact_from_0 <- Tact - T0    # 10
 T01go <- Tend - T0 + 1  # 17
-T1go <- T01go - T0go  # 7
+T1go <- T01go - Tact_from_0  # 7
 
 time <- seq(T0, Tend, 1)
 
-### Data
+# Parameters
+
+q_norm <- 1 # L_1 norm
+perm <- 200
+
+# Data
 
 fdi_data <- read_csv("../data/investment/FDI_for_sc.csv") %>% as.data.frame()
 country_list <- read_lines("../data/obor_list.txt")

@@ -77,7 +77,7 @@ ci_calculator <- function() {
     rename(年份 = V1)
   tb_did <- tb_did %>% group_by(年份) %>% summarise(min(ci.did), max(ci.did), median(ci.did))
 
-  tb <- left_join(tb_sc, tb_did)
+  tb <- left_join(tb_sc, tb_did) %>%
     mutate(国家 = country_name, .after = 年份)
 
   c.i <<- c.i %>% bind_rows(tb)

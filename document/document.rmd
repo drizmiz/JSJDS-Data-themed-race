@@ -2,7 +2,7 @@
 title: "一带一路对中国和其他沿线国家的影响及政策分析"
 subtitle: "数据科学的视角"
 author:
-  - 范浩年
+  - 范皓年
   - 邓睿哲
   - 李润泽[^a]
 documentclass: ctexart
@@ -181,8 +181,6 @@ df1 %>% write_csv(file = "./data/investment/FDI_OBOR.csv")
 ```
 
 ## Understand
-
-
 
 ```{r echo = FALSE, eval = FALSE}
 pdf("Missing data.pdf", width = 9, height = 4)

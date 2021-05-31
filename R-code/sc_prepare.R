@@ -12,6 +12,7 @@ dat1 <- read_csv("../data/investment/FDI_filled.csv")
 dat1 <- dat1 %>%
   mutate(lg = robust_log(对外直接投资), .keep = "unused") %>%
   select(-地区) %>%
+  filter(国家 != "马尔代夫", 国家 != "以色列")%>%
   pivot_wider(names_from = "国家", values_from = "lg") %>%
   arrange(年份) %>%
   select(-年份)

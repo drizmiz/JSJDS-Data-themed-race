@@ -129,11 +129,14 @@
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
-\hypertarget{ux524dux8a00}{%
-\section{前言}\label{ux524dux8a00}}
+\hypertarget{summary}{%
+\section{SUMMARY}\label{summary}}
 
 \hypertarget{ux6982ux8981}{%
 \subsection{概要}\label{ux6982ux8981}}
+
+\hypertarget{ux524dux8a00}{%
+\section{前言}\label{ux524dux8a00}}
 
 \hypertarget{ux73afux5883}{%
 \subsection{环境}\label{ux73afux5883}}
@@ -163,7 +166,13 @@
 \hypertarget{python-info}{%
 \subsubsection{python info}\label{python-info}}
 
-// TODO
+本项目的python部分使用python 3.8.8生成，部分包版本号如下：
+
+\begin{quote}
+\textbf{conda}** 4.10.1; \textbf{pyecharts} 1.9.0; \textbf{numpy}
+1.20.1; \textbf{json5} 0.9.5; \textbf{pandas} 1.2.4; \textbf{jupyterlab}
+3.0.14
+\end{quote}
 
 \hypertarget{ux4e3bux8981ux7ed3ux679c}{%
 \section{主要结果}\label{ux4e3bux8981ux7ed3ux679c}}
@@ -182,7 +191,8 @@
 \caption{数据模型示意图}\label{fig:unnamed-chunk-3}
 \end{figure}
 
-此图\textsuperscript{{[}1{]}}是有向无环图(Directed acyclic graph,
+此图在R语言中，用\textbf{ggdag}\textsuperscript{{[}1{]}}生成.
+是有向无环图(Directed acyclic graph,
 DAG)，边代表因果作用\textsuperscript{{[}2{]}}.
 
 \begin{figure}
@@ -203,12 +213,15 @@ DAG)，边代表因果作用\textsuperscript{{[}2{]}}.
 首先注意到数据集中存在许多缺失数据\textsuperscript{{[}4{]}}，使用linear
 regression with bootstrap进行缺失数据填补.\textsuperscript{{[}5{]}}
 
-\hypertarget{ux7a0bux5e8f}{%
-\subsection{程序}\label{ux7a0bux5e8f}}
+\hypertarget{ux7a0bux5e8fux6280ux672f}{%
+\subsection{程序技术}\label{ux7a0bux5e8fux6280ux672f}}
 
 \hypertarget{non-standard-evaluation-in-r}{%
 \subsubsection{Non-standard evaluation in
 R}\label{non-standard-evaluation-in-r}}
+
+本项目使用了一种在R中非常重要的技术，即Non-standard evaluation，又称lazy
+evaluation.\textsuperscript{{[}6{]}}
 
 \hypertarget{ux5177ux4f53ux6d41ux7a0b}{%
 \section{具体流程}\label{ux5177ux4f53ux6d41ux7a0b}}
@@ -216,15 +229,16 @@ R}\label{non-standard-evaluation-in-r}}
 \hypertarget{the-workflow}{%
 \subsection{The Workflow}\label{the-workflow}}
 
+根据\_R for Data Science\_\textsuperscript{{[}7{]}}，
+
 \begin{figure}
 \centering
 \includegraphics{resources/workflow.png}
 \caption[The Data Science Workflow]{The Data Science
 Workflow\footnotemark{}}
 \end{figure}
-\footnotetext{This picture is from \emph{R for Data
-  Science}\textsuperscript{{[}6{]}}, released under
-  \href{http://creativecommons.org/licenses/by-nc-nd/3.0/us/}{CC
+\footnotetext{This picture is from \emph{R for Data Science}, released
+  under \href{http://creativecommons.org/licenses/by-nc-nd/3.0/us/}{CC
   BY-NC-ND 3.0 US}.}
 
 \hypertarget{import}{%
@@ -237,7 +251,7 @@ Workflow\footnotemark{}}
 \hypertarget{tidy}{%
 \subsection{Tidy}\label{tidy}}
 
-tidy data\textsuperscript{{[}7{]}}
+tidy data\textsuperscript{{[}8{]}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -379,7 +393,7 @@ tidy data\textsuperscript{{[}7{]}}
 \subsubsection{可视化工具}\label{ux53efux89c6ux5316ux5de5ux5177}}
 
 项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于(Apache
-Echarts)\textsuperscript{{[}8{]}}的Pyecharts。
+Echarts)\textsuperscript{{[}9{]}}的Pyecharts。
 
 我们主要做了如下几个可视化工作：
 
@@ -514,17 +528,20 @@ Journal of Statistical Software, 2016, 74(7): 1--16.
 Imputation by Chained Equations in R{[}J{]}. Journal of Statistical
 Software, 2011, 45(3): 1--67.
 
+\leavevmode\hypertarget{ref-wickham_2019}{}%
+{[}6{]} WICKHAM H. Advanced R{[}M{]}. CRC Press, 2019.
+
 \leavevmode\hypertarget{ref-Wickham2017R}{}%
-{[}6{]} WICKHAM H, GROLEMUND G. R for Data Science: Import, Tidy,
+{[}7{]} WICKHAM H, GROLEMUND G. R for Data Science: Import, Tidy,
 Transform, Visualize, and Model Data{[}M{]}. 第1版. Paperback; O'Reilly
 Media, 2017.
 
 \leavevmode\hypertarget{ref-tidy-data}{}%
-{[}7{]} WICKHAM H. Tidy data{[}J{]}. The Journal of Statistical
+{[}8{]} WICKHAM H. Tidy data{[}J{]}. The Journal of Statistical
 Software, 2014, 59(10).
 
 \leavevmode\hypertarget{ref-LI2018136}{}%
-{[}8{]} LI D, MEI H, SHEN Y, 等. ECharts: A declarative framework for
+{[}9{]} LI D, MEI H, SHEN Y, 等. ECharts: A declarative framework for
 rapid construction of web-based visualization{[}J{]}. Visual
 Informatics, 2018, 2(2): 136--146.
 

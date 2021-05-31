@@ -22,9 +22,12 @@ monofont: Fira Mono
 
 [^a]: 名拼音序.
 
-# 前言
+# SUMMARY
 
 ## 概要
+
+
+# 前言
 
 ## 环境
 
@@ -54,7 +57,14 @@ xfun::session_info(
 
 ### python info
 
-// TODO
+本项目的python部分使用python 3.8.8生成，部分包版本号如下：
+
+> **conda** 4.10.1;
+> **pyecharts** 1.9.0;
+> **numpy** 1.20.1;
+> **json5** 0.9.5;
+> **pandas** 1.2.4;
+> **jupyterlab** 3.0.14
 
 # 主要结果
 
@@ -66,28 +76,54 @@ xfun::session_info(
 include_graphics("resources/DAG.pdf")
 ```
 
-此图[@citation_ggdag]是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
+此图在R语言中，用**ggdag**[@citation_ggdag]生成. 是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
+
+
+
+
+## 分析技术
 
 ```{r echo = FALSE, warning = FALSE, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
 include_graphics("resources/Missing data.pdf")
 ```
-## 分析
-
-我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
 
 首先注意到数据集中存在许多缺失数据[@citation_VIM]，使用linear regression with bootstrap进行缺失数据填补.[@citation_mice]
 
-## 程序
+然后我们利用两种方法分析其
+
+Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
+
+## 程序技术
 
 ### Non-standard evaluation in R
+
+本项目使用了一种在R中非常重要的技术，即Non-standard evaluation，又称lazy evaluation.[@wickham_2019]
+
+具体来说，让我们看一段重要代码：
+```r
+### Using lazy evaluation to replicate a func along country list
+repli <- function(fun) {
+  ex <- substitute(fun)
+
+  for (i in seq_along(country_list)) {
+    # ...
+    eval(ex, envir = globalenv())
+  }
+}
+```
+
+
+其中的`substitute`
 
 # 具体流程
 
 ## The Workflow
 
+根据_R for Data Science_[@Wickham2017R]，
+
 ![The Data Science Workflow[^1]](resources/workflow.png)
 
-[^1]: This picture is from _R for Data Science_[@Wickham2017R], released under [CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/).
+[^1]: This picture is from _R for Data Science_, released under [CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/).
 
 ## Import
 

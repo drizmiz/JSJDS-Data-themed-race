@@ -81,7 +81,7 @@ ci_calculator <- function() {
     mutate(国家 = country_name, .after = 年份)
 
   c.i <<- c.i %>% bind_rows(tb)
-  pdf_plot_confidence_interval_did(directory = directory)
+  pdf_plot_confidence_interval(directory = directory)
 }
 
 repli(placebo_specification_test())

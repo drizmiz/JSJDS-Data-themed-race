@@ -51,6 +51,6 @@ pdf_plot_confidence_interval_did <- function(directory) {
 }
 
 pdf_plot_confidence_interval <- function(directory) {
-  pdf_plot_confidence_interval_did()
-  pdf_plot_confidence_interval_sc()
+  pdf_plot_confidence_interval_did(directory)
+  pdf_plot_confidence_interval_sc(directory)
 }

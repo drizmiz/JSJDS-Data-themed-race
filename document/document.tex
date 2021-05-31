@@ -169,9 +169,8 @@
 本项目的python部分使用python 3.8.8生成，部分包版本号如下：
 
 \begin{quote}
-\textbf{conda}** 4.10.1; \textbf{pyecharts} 1.9.0; \textbf{numpy}
-1.20.1; \textbf{json5} 0.9.5; \textbf{pandas} 1.2.4; \textbf{jupyterlab}
-3.0.14
+\textbf{conda} 4.10.1; \textbf{pyecharts} 1.9.0; \textbf{numpy} 1.20.1;
+\textbf{json5} 0.9.5; \textbf{pandas} 1.2.4; \textbf{jupyterlab} 3.0.14
 \end{quote}
 
 \hypertarget{ux4e3bux8981ux7ed3ux679c}{%
@@ -195,6 +194,11 @@
 是有向无环图(Directed acyclic graph,
 DAG)，边代表因果作用\textsuperscript{{[}2{]}}.
 
+在该模型中，我们假定
+
+\hypertarget{ux5206ux6790ux6280ux672f}{%
+\subsection{分析技术}\label{ux5206ux6790ux6280ux672f}}
+
 \begin{figure}
 
 {\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{resources/Missing data} 
@@ -204,14 +208,105 @@ DAG)，边代表因果作用\textsuperscript{{[}2{]}}.
 \caption{缺失数据示意图}\label{fig:unnamed-chunk-4}
 \end{figure}
 
-\hypertarget{ux5206ux6790}{%
-\subsection{分析}\label{ux5206ux6790}}
+首先注意到数据集中存在许多缺失数据\textsuperscript{{[}3{]}}.
 
-我们利用(Chernozhukov et al.,
-2021)\textsuperscript{{[}3{]}}的方法进行分析.
+我们利用两种方法分析.
 
-首先注意到数据集中存在许多缺失数据\textsuperscript{{[}4{]}}，使用linear
-regression with bootstrap进行缺失数据填补.\textsuperscript{{[}5{]}}
+\hypertarget{ux4e8cux91cdux5deeux5206ux6cd5}{%
+\subsubsection{二重差分法}\label{ux4e8cux91cdux5deeux5206ux6cd5}}
+
+二重差分法(Difference-in-Differences)是一种经典技术.
+它运用以下模型\textsuperscript{{[}4{]}}.
+
+\[
+P_{t}^{N}=\mu+\frac{1}{J} \sum_{j=2}^{J+1} Y_{j t}^{N}
+\]
+
+并用如下公式来估计.
+
+\[
+\hat{P}_{t}^{N}=\frac{1}{T} \sum_{s=1}^{T}\left(Y_{1 s}^{N}-\frac{1}{J} \sum_{j=2}^{J+1} Y_{j s}^{N}\right)+\frac{1}{J} \sum_{j=2}^{J+1} Y_{j t}^{N}
+\]
+
+\hypertarget{ux5408ux6210ux63a7ux5236ux6cd5}{%
+\subsubsection{合成控制法}\label{ux5408ux6210ux63a7ux5236ux6cd5}}
+
+合成控制法(Synthetic Control)是另一种经典技术.
+它运用以下模型\textsuperscript{{[}5{]}}.
+
+\[
+P_{t}^{N}=\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}, \text { where } w \geq 0 \text { and } \sum_{j=2}^{J+1} w_{j}=1 \text { . (3) }
+\]
+
+为了识别权重\(w\)，我们需要一些假设.
+我们假定结构冲击项\(u_{t}\)在同一时段内互不相关，即：
+
+\[
+E\left(u_{i} Y_{j t}^{N}\right)=0 \text { for } 2 \leq j \leq J+1 .
+\]
+
+于是就有\(\hat{P}_{t}^{N}=\sum_{j=2}^{J+1} \hat{w}_{j} Y_{j t}^{N} .\)
+
+而\(w\)的估计
+
+\[
+\hat{w}=\arg \min _{w} \sum_{i=1}^{T}\left(Y_{1 t}^{N}-\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}\right)^{2}\text{s.t.}\mathrm{w}\geq 0\text{and}\sum_{\mathrm{j}=2}^{\mathrm{J}+1} \mathrm{w}_{\mathrm{j}}=1 .
+\]
+
+此后，我们利用Chernozhukov et
+al.\textsuperscript{{[}6{]}}的方法分析其置信区间.
+
+\hypertarget{ux7f3aux5931ux6570ux636eux586bux8865}{%
+\subsubsection{缺失数据填补}\label{ux7f3aux5931ux6570ux636eux586bux8865}}
+
+我们的数据集，正和许多类似的真实世界数据集一样，存在着许多缺失数据\texttt{NA}.
+缺失数据的处理方式不外乎删除或填补.
+
+\begin{itemize}
+\tightlist
+\item
+  对于我们的investment数据集，其缺失普遍存在，故我们采用填补的方法.
+\item
+  对于本次大赛提供的世界健康数据集，其缺失更有规律，即对于任意一个国家，缺失一个时间点的数据意味着缺失此前所有数据.
+  恰当地选择时间范围，再删去个别几个缺失较大的国家\footnote{这些国家往往那时才成立，例如从母国中分裂出.}，就在可以避免填补的同时保留大部分数据.
+  因此，我们选择删去.
+\end{itemize}
+
+对于前者，我们调用R包\textbf{mice}\textsuperscript{{[}7{]}}，采用linear
+regression with bootstrap的方法进行缺失数据填补.
+首先，对数据进行bootstrap重抽样，进行线性回归插值，然后计算均值得到最后结果.
+其中，多元线性回归的步骤采用Schafer的算法\textsuperscript{{[}8{]}}，其步骤如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Calculate the cross-product matrix \(S=X_{o b s}^{\prime} X_{o b s}\)
+\item
+  Calculate \(V=(S+\operatorname{diag}(S) \kappa)^{-1}\), with some
+  small ridge parameter \(\kappa\).
+\item
+  Calculate regression weights
+  \(\hat{\beta}=V X_{\text {obs }}^{\prime} y_{\text {obs }}\).
+\item
+  Draw a random variable \(\dot{g} \sim \chi_{\nu}^{2}\) with
+  \(\nu=n_{1}-q\).
+\item
+  Calculate
+  \(\dot{\sigma}^{2}=\left(y_{o b s}-X_{o b s} \hat{\beta}\right)^{\prime}\left(y_{o b s}-X_{o b s} \hat{\beta}\right) / \dot{g} .\)
+\item
+  Draw \(q\) independent \(N(0,1)\) variates in vector \(\dot{z}_{1}\).
+\item
+  Calculate \(V^{1 / 2}\) by Cholesky decomposition.
+\item
+  Calculate
+  \(\dot{\beta}=\hat{\beta}+\dot{\sigma} \dot{z}_{1} V^{1 / 2}\).
+\item
+  Draw \(n_{0}\) independent \(N(0,1)\) variates in vector
+  \(\dot{z}_{2}\).
+\item
+  Calculate the \(n_{0}\) values
+  \(y_{i m p}=X_{m i s} \dot{\beta}+\dot{z}_{2} \dot{\sigma}\).
+\end{enumerate}
 
 \hypertarget{ux7a0bux5e8fux6280ux672f}{%
 \subsection{程序技术}\label{ux7a0bux5e8fux6280ux672f}}
@@ -221,7 +316,25 @@ regression with bootstrap进行缺失数据填补.\textsuperscript{{[}5{]}}
 R}\label{non-standard-evaluation-in-r}}
 
 本项目使用了一种在R中非常重要的技术，即Non-standard evaluation，又称lazy
-evaluation.\textsuperscript{{[}6{]}}
+evaluation.\textsuperscript{{[}9{]}}
+
+具体来说，让我们看一段重要代码：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{### Using lazy evaluation to replicate a func along country list}
+\NormalTok{repli <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(fun) \{}
+\NormalTok{  ex <-}\StringTok{ }\KeywordTok{substitute}\NormalTok{(fun)}
+
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \KeywordTok{seq_along}\NormalTok{(country_list)) \{}
+    \CommentTok{# ...}
+    \KeywordTok{eval}\NormalTok{(ex, }\DataTypeTok{envir =} \KeywordTok{globalenv}\NormalTok{())}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+其中的\texttt{substitute}
 
 \hypertarget{ux5177ux4f53ux6d41ux7a0b}{%
 \section{具体流程}\label{ux5177ux4f53ux6d41ux7a0b}}
@@ -229,7 +342,7 @@ evaluation.\textsuperscript{{[}6{]}}
 \hypertarget{the-workflow}{%
 \subsection{The Workflow}\label{the-workflow}}
 
-根据\_R for Data Science\_\textsuperscript{{[}7{]}}，
+根据 \emph{R for Data Science}\textsuperscript{{[}10{]}}，
 
 \begin{figure}
 \centering
@@ -244,14 +357,18 @@ Workflow\footnotemark{}}
 \hypertarget{import}{%
 \subsection{Import}\label{import}}
 
-// 需要数据集的完整描述和获取方式
+国际贸易数据（\texttt{/data/investment}）下载自CEIC数据库。我们引用CEIC全球数据库中``实际利用的外国资本：按地区分类''和``对外直接投资：国别''两个数据集，并经过清洗得到可供分析的数据集。
+
+其中，实际利用的外国资本分为直接投资和其他投资方式。直接投资包括中外合资，合资开发和独资企业，外资参股公司以及共同开发；其他投资方式包括补偿贸易和加工组装。数据来源为国家统计局和中华人民共和国商务部。
+
+对外直接投资指中国国内投资者以现金、实物、无形资产等方式在国外及港澳台地区设立、购买国（境）外企业，并以控制该企业的经营管理权为核心的经济活动。数据统计来源为中华人民共和国商务部。
 
 // TODO - \textbf{R. Li}
 
 \hypertarget{tidy}{%
 \subsection{Tidy}\label{tidy}}
 
-tidy data\textsuperscript{{[}8{]}}
+tidy data\textsuperscript{{[}11{]}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -393,7 +510,7 @@ tidy data\textsuperscript{{[}8{]}}
 \subsubsection{可视化工具}\label{ux53efux89c6ux5316ux5de5ux5177}}
 
 项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于(Apache
-Echarts)\textsuperscript{{[}9{]}}的Pyecharts。
+Echarts)\textsuperscript{{[}12{]}}的Pyecharts。
 
 我们主要做了如下几个可视化工作：
 
@@ -513,35 +630,50 @@ Graphs{[}M{]}. 2021.
 {[}2{]} PEARL J, GLYMOUR M, JEWELL N P. Causal inference in statistics:
 a primer{[}M{]}. Wiley, 2019.
 
+\leavevmode\hypertarget{ref-citation_VIM}{}%
+{[}3{]} KOWARIK A, TEMPL M. Imputation with the R Package VIM{[}J{]}.
+Journal of Statistical Software, 2016, 74(7): 1--16.
+
+\leavevmode\hypertarget{ref-NBERw22791}{}%
+{[}4{]} DOUDCHENKO N, IMBENS G W. Balancing, Regression,
+Difference-In-Differences and Synthetic Control Methods: A
+Synthesis{[}R{]}. Working Paper Series, 22791, National Bureau of
+Economic Research, 2016.
+
+\leavevmode\hypertarget{ref-sc_method}{}%
+{[}5{]} ABADIE A, GARDEAZABAL J. The Economic Costs of Conflict: A Case
+Study of the Basque Country{[}J{]}. The American Economic Review,
+American Economic Association, 2003, 93(1): 113--132.
+
 \leavevmode\hypertarget{ref-doi:10.1080ux2f01621459.2021.1920957}{}%
-{[}3{]} CHERNOZHUKOV V, WÜTHRICH K, ZHU Y. An Exact and Robust Conformal
+{[}6{]} CHERNOZHUKOV V, WÜTHRICH K, ZHU Y. An Exact and Robust Conformal
 Inference Method for Counterfactual and Synthetic Controls{[}J{]}.
 Journal of the American Statistical Association, Taylor \& Francis,
 2021, 0(ja): 1--44.
 
-\leavevmode\hypertarget{ref-citation_VIM}{}%
-{[}4{]} KOWARIK A, TEMPL M. Imputation with the R Package VIM{[}J{]}.
-Journal of Statistical Software, 2016, 74(7): 1--16.
-
 \leavevmode\hypertarget{ref-citation_mice}{}%
-{[}5{]} VAN BUUREN S, GROOTHUIS-OUDSHOORN K. mice: Multivariate
+{[}7{]} VAN BUUREN S, GROOTHUIS-OUDSHOORN K. mice: Multivariate
 Imputation by Chained Equations in R{[}J{]}. Journal of Statistical
 Software, 2011, 45(3): 1--67.
 
+\leavevmode\hypertarget{ref-schafer_1997}{}%
+{[}8{]} SCHAFER J L. Analysis of incomplete multivariate data{[}M{]}.
+Chapman \& Hall/CRC, 1997.
+
 \leavevmode\hypertarget{ref-wickham_2019}{}%
-{[}6{]} WICKHAM H. Advanced R{[}M{]}. CRC Press, 2019.
+{[}9{]} WICKHAM H. Advanced R{[}M{]}. CRC Press, 2019.
 
 \leavevmode\hypertarget{ref-Wickham2017R}{}%
-{[}7{]} WICKHAM H, GROLEMUND G. R for Data Science: Import, Tidy,
+{[}10{]} WICKHAM H, GROLEMUND G. R for Data Science: Import, Tidy,
 Transform, Visualize, and Model Data{[}M{]}. 第1版. Paperback; O'Reilly
 Media, 2017.
 
 \leavevmode\hypertarget{ref-tidy-data}{}%
-{[}8{]} WICKHAM H. Tidy data{[}J{]}. The Journal of Statistical
+{[}11{]} WICKHAM H. Tidy data{[}J{]}. The Journal of Statistical
 Software, 2014, 59(10).
 
 \leavevmode\hypertarget{ref-LI2018136}{}%
-{[}9{]} LI D, MEI H, SHEN Y, 等. ECharts: A declarative framework for
+{[}12{]} LI D, MEI H, SHEN Y, 等. ECharts: A declarative framework for
 rapid construction of web-based visualization{[}J{]}. Visual
 Informatics, 2018, 2(2): 136--146.
 

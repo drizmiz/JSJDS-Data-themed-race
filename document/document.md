@@ -30,27 +30,26 @@ monofont: Fira Mono
 
 [^dep]: 部分依赖省略.
 
-```{r include = FALSE}
-library(tidyverse)
 
-library(lubridate)
 
-library(ggdag)
-library(showtext)
-library(knitr)
 
-library(mice)
-library(VIM)
 ```
-
-```{r echo=FALSE}
-xfun::session_info(
-  packages = c(
-    "readr", "tidyr", "stringr", "dplyr", "purrr",
-    "tidyverse", "lubridate", "mice",
-    "ggplot2", "ggdag", "showtext", "VIM"
-  ), dependencies = FALSE
-)
+## R version 4.1.0 (2021-05-18)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.2 LTS
+## 
+## Locale:
+##   LC_CTYPE=zh_CN.UTF-8       LC_NUMERIC=C              
+##   LC_TIME=zh_CN.UTF-8        LC_COLLATE=zh_CN.UTF-8    
+##   LC_MONETARY=zh_CN.UTF-8    LC_MESSAGES=zh_CN.UTF-8   
+##   LC_PAPER=zh_CN.UTF-8       LC_NAME=C                 
+##   LC_ADDRESS=C               LC_TELEPHONE=C            
+##   LC_MEASUREMENT=zh_CN.UTF-8 LC_IDENTIFICATION=C       
+## 
+## Package version:
+##   dplyr_1.0.6      ggdag_0.2.3      ggplot2_3.3.3    lubridate_1.7.10
+##   mice_3.13.0      purrr_0.3.4      readr_1.4.0      showtext_0.9-2  
+##   stringr_1.4.0    tidyr_1.1.3      tidyverse_1.3.1  VIM_6.1.0
 ```
 
 ## python环境
@@ -70,9 +69,14 @@ xfun::session_info(
 
 我们的数据模型如图所示：
 
-```{r echo = FALSE, warning = FALSE, fig.cap = "数据模型示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
-include_graphics("resources/DAG.pdf")
-```
+\begin{figure}
+
+{\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{resources/DAG} 
+
+}
+
+\caption{数据模型示意图}\label{fig:unnamed-chunk-3}
+\end{figure}
 
 此图在R语言中，用**ggdag**[@citation_ggdag]生成. 是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
 
@@ -84,9 +88,14 @@ include_graphics("resources/DAG.pdf")
 本项目主要利用到以下三种分析技术. 首先注意到数据集中存在许多缺失数据[@citation_VIM]. 缺失数据的删除或填补需要用到一些技术. 分析一带一路的影响，就是要分析某一事件发生后，某一值的变化情况. 该值自身也存在着模型外因素导致的变化趋势，所以我们必须利用某些技术来去除这些因素的影响. 于是，我们运用如
 下所述的双重差分和合成控制两种技术.
 
-```{r echo = FALSE, warning = FALSE, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
-include_graphics("resources/Missing data.pdf")
-```
+\begin{figure}
+
+{\centering \includegraphics[width=0.65\linewidth,height=0.6\textheight]{resources/Missing data} 
+
+}
+
+\caption{缺失数据示意图}\label{fig:unnamed-chunk-4}
+\end{figure}
 
 ### 缺失数据填补
 

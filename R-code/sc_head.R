@@ -25,12 +25,20 @@ perm <- 200
 
 # Data
 
-fdi_data <- read_csv("../data/investment/FDI_for_sc.csv") %>% as.data.frame()
+#fdi_data <- read_csv("../data/investment/FDI_for_sc.csv") %>% as.data.frame()
+IMR_data <- read_csv("../data/world_health/tidy/iMR_for_sc.csv") %>% as.data.frame()
+fdi_str <- "Log FDI from China"
+IMR_str <- "Log Infant Mortality Rate"
+
+data <- IMR_data
+legend_str <- IMR_str
+
 country_list <- read_lines("../data/obor_list.txt")
 
 country_list <- country_list[
-  country_list %in% names(fdi_data) %>% which()
+  country_list %in% names(data) %>% which()
 ]
+
 
 ### Using lazy evaluation to replicate a func along country list
 repli <- function(fun) {
@@ -39,10 +47,10 @@ repli <- function(fun) {
   for (i in seq_along(country_list)) {
     # Column i: trials (one-belt-one-road); other columns: controls
     country_name <<- country_list[i]
-    idx <- country_name %>% match(names(fdi_data))
+    idx <- country_name %>% match(names(data))
 
-    Y1go <<- as.matrix(fdi_data[, idx])
-    Y0go <<- as.matrix(fdi_data[, (seq_along(fdi_data))[-idx]])
+    Y1go <<- as.matrix(data[, idx])
+    Y0go <<- as.matrix(data[, (seq_along(data))[-idx]])
 
     eval(ex, envir = globalenv())
   }

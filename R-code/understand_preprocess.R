@@ -3,8 +3,6 @@
 
 library(tidyverse)
 
-source("sc_prepare.R")
-
 # Time periods
 
 T0 <- 2003
@@ -25,13 +23,15 @@ perm <- 200
 
 # Data
 
-#fdi_data <- read_csv("../data/investment/FDI_for_sc.csv") %>% as.data.frame()
+fdi_data <- read_csv("../data/investment/FDI_for_sc.csv") %>% as.data.frame()
 IMR_data <- read_csv("../data/world_health/tidy/iMR_for_sc.csv") %>% as.data.frame()
 fdi_str <- "Log FDI from China"
 IMR_str <- "Log Infant Mortality Rate"
 
+# 更改此处以改变数据源
 data <- IMR_data
 legend_str <- IMR_str
+directory <- "../results/results_IMR/"
 
 country_list <- read_lines("../data/obor_list.txt")
 

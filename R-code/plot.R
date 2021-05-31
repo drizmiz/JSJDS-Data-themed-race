@@ -21,22 +21,8 @@ pdf_plot_raw <- function(directory) {
 
 # repli(pdf_plot_raw(directory = "../visualization/obor_raw_plot/"))
 
-pdf_plot2 <- function(directory) {
-  pdf(paste0(directory, "_investment_resid_pre_did.pdf"), pointsize = 16, width = 6.0, height = 6.0)
-  plot(range(seq(T0, Tpre, 1)), c(-1, 1), ylab = "Residuals Pre-One belt One Road", xlab = "Time", main = "Difference-in-Differences", type = "n")
-  points(seq(T0, Tpre, 1), u.hat.go.pre.did, col = "black", pch = 20, lwd = 2)
-  abline(h = 0, col = "grey", lty = 2, lwd = 1)
-  graphics.off()
-
-  pdf(paste0(directory, "_investment_resid_pre_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
-  plot(range(seq(T0, Tpre, 1)), c(-1, 1), ylab = "Residuals Pre-One belt One Road", xlab = "Time", main = "Synthetic Control", type = "n")
-  points(seq(T0, Tpre, 1), u.hat.go.pre.sc, col = "black", pch = 20, lwd = 2)
-  abline(h = 0, col = "grey", lty = 2, lwd = 1)
-  graphics.off()
-}
-
-pdf_plot3 <- function(directory) {
-  pdf(paste0(directory, "_ci_investment_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
+pdf_plot_confidence_interval <- function(directory) {
+  pdf(paste0(directory, country_name, "_ci_investment_sc.pdf"), pointsize = 16, width = 6.0, height = 6.0)
   plot(vec.ci.sc[, 1], vec.ci.sc[, 2], ylab = "Gap in Log FDI from China", xlab = "Years", main = "",
        col = "black", pch = "eda-doc", xlim = c(Tpre, Tend + 1), ylim = c(-3, 3))
   title("Synthetic Control")
@@ -46,7 +32,7 @@ pdf_plot3 <- function(directory) {
   legend(Tpre + 0.3, 2, legend = "", cex = 1, col = "black", pch = 16, bty = ("n"))
   graphics.off()
 
-  pdf(paste0(directory, "_ci_investment_did.pdf"), pointsize = 16, width = 6.0, height = 6.0)
+  pdf(paste0(directory, country_name, "_ci_investment_did.pdf"), pointsize = 16, width = 6.0, height = 6.0)
   plot(vec.ci.did[, 1], vec.ci.did[, 2], ylab = "Gap in Log FDI from China", xlab = "Years", main = "",
        col = "black", pch = "eda-doc", xlim = c(Tpre, Tend + 1), ylim = c(-3, 3))
   title("Difference-in-Differences")

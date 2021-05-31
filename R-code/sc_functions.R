@@ -14,13 +14,14 @@ sc <- function(Y1, Y0) {
   f <- 1
   g <- diag(x = 1, J, J)
   h <- matrix(0, J, 1)
-  w.hat <- lsei(A = Y0, B = Y1, E = e, F = f, G = g, H = h, type = 2)$X
+  # solves min(||AX-B||^2) subject to EX = F and GX >= H
+  w.hat <- lsei(A = Y0, B = Y1, E = e, F = f, G = g, H = h, type = 2, tol = 1e-04)$X
   u.hat <- Y1 - Y0 %*% w.hat
   return(list(u.hat = u.hat, w.hat = w.hat))
 }
 
 # Moving block permutations
-moving.block.q <- function(Y1, Y0, T0, T1, M, q) {
+moving_block_q <- function(Y1, Y0, T0, T1, M, q) {
   T01 <- T0 + T1
   if (M == "sc") {
     u.hat <- sc(Y1, Y0)$u.hat

@@ -1,64 +1,92 @@
 ---
-title: "Exploratory Data Analysis"
-subtitle: "可重复性报告 - 作为报告草稿"
+title: "一带一路对中国和其他沿线国家的影响及政策分析"
+subtitle: "数据科学的视角"
+author:
+  - 范皓年
+  - 邓睿哲
+  - 李润泽[^a]
 documentclass: ctexart
 output:
   rticles::ctex:
     fig_caption: yes
     number_sections: yes
     toc: yes
-
-    keep_md: yes
-    keep_tex: yes
     includes:
-      in_header: "preamble.tex"
-bibliography: citation.bib
-csl: cn_gb.csl
+      in_header: "resources/preamble.tex"
+bibliography: resources/citation.bib
+csl: resources/cn_gb.csl
 geometry: left=2cm, right=2cm, top=2.5cm, bottom=2.5cm
 monofont: Fira Mono
 ---
 
-# 环境
+[^a]: 名拼音序.
 
-## R info
+# 前言
+
+## 概要
+
+## 环境
+
+### R info
 ```{r include = FALSE}
-library(readr)
-library(tidyr)
-library(dplyr)
-
-library(stringr)
-library(purrr)
+library(tidyverse)
 
 library(lubridate)
 
 library(ggdag)
 library(showtext)
+library(knitr)
 
 library(mice)
 library(VIM)
 ```
 
-```{r comment = ""}
+```{r echo=FALSE}
 xfun::session_info(
-        packages = c(
-                "readr", "tidyr", "stringr", "dplyr", "purrr",
-                "tidyverse", "lubridate", "mice",
-                "ggplot2", "ggdag", "showtext", "VIM"
-        ), dependencies = FALSE
+  packages = c(
+    "readr", "tidyr", "stringr", "dplyr", "purrr",
+    "tidyverse", "lubridate", "mice",
+    "ggplot2", "ggdag", "showtext", "VIM"
+  ), dependencies = FALSE
 )
 ```
 
-## python info
+### python info
 
 // TODO
 
-# 分析
+# 主要结果
+
+## 数据模型
+
+我们的数据模型如图所示：
+
+```{r echo = FALSE, warning = FALSE, fig.cap = "数据模型示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
+include_graphics("resources/DAG.pdf")
+```
+
+此图[@citation_ggdag]是有向无环图(Directed acyclic graph, DAG)，边代表因果作用[@pearl].
+
+```{r echo = FALSE, warning = FALSE, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
+include_graphics("resources/Missing data.pdf")
+```
+## 分析
+
+我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
+
+首先注意到数据集中存在许多缺失数据[@citation_VIM]，使用linear regression with bootstrap进行缺失数据填补.[@citation_mice]
+
+## 程序
+
+### Non-standard evaluation in R
+
+# 具体流程
 
 ## The Workflow
 
-![The Data Science Workflow[^1]](workflow.png)
+![The Data Science Workflow[^1]](resources/workflow.png)
 
-[^1]: This picture is from [R for Data Science](https://r4ds.had.co.nz/introduction.html) by Hadley Wickham and Garrett Grolemund, released under [CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/).
+[^1]: This picture is from _R for Data Science_[@Wickham2017R], released under [CC BY-NC-ND 3.0 US](http://creativecommons.org/licenses/by-nc-nd/3.0/us/).
 
 ## Import
 
@@ -68,7 +96,9 @@ xfun::session_info(
 
 ## Tidy
 
-```{r cache = TRUE, message = FALSE}
+tidy data[@tidy-data]
+
+```r
 raw_df <- read_csv("./data/investment/FDI_untidy.csv")
 
 process <- function(raw_df) {
@@ -108,7 +138,7 @@ raw_df %>%
   write_csv("./data/investment/FDI_tidy_cont.csv")
 ```
 
-```{r cache = TRUE}
+```r
 raw_df <- read_csv(
   file = "./data/investment/FDI_tidy_cont.csv",
   col_types = cols(
@@ -152,74 +182,15 @@ df1 %>% write_csv(file = "./data/investment/FDI_OBOR.csv")
 
 ## Understand
 
-我们的数据模型非常简单，如图所示：
-
-```{r cache = TRUE, echo = FALSE, warning = FALSE, fig.showtext = TRUE, fig.width = 9, fig.height = 4, fig.cap = "数据模型示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
-lbl = c(
-  "X" = "一带一路参与程度",
-  "Y" = "FDI (外国直接投资)",
-  "Z" = "经济发展水平",
-  "W" = "健康水平 (若干指标)",
-  "U1",
-  "U2",
-  "U3"
-)
-
-
-dag <- dagify(
-  W ~ Z,
-  Z ~ Y,
-  Y ~ X,
-  W ~ X,
-  Y ~ U1,
-  Z ~ U2,
-  W ~ U3,
-  labels = lbl
-  )
-
-ggplot(dag, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_dag_point(colour = 'Gray') +
-  geom_dag_edges(
-    curvature = 0,
-    arrow_bidirected = grid::arrow(
-      length = grid::unit(x = 0, units = "pt")
-    )
-  ) +
-  geom_dag_text(colour = 'white') +
-  geom_dag_label_repel(aes(label = label)) +
-  theme_dag_blank()
-
-
+```{r echo = FALSE, eval = FALSE}
+pdf("Missing data.pdf", width = 9, height = 4)
+showtext_begin()
+# plot something
+showtext_end()
+dev.off()
 ```
 
-此图是有向无环图(Directed acyclic graph, DAG)，边代表因果作用.
-
-我们利用(Chernozhukov et al., 2021)[@doi:10.1080/01621459.2021.1920957]的方法进行分析.
-
-首先注意到数据集中存在许多缺失数据：
-
-```{r cache = TRUE, echo = FALSE, warning = FALSE, fig.showtext = TRUE, fig.width = 9, fig.height = 4, fig.cap = "缺失数据示意图", out.width = '65%', out.height = '60%', fig.align = 'center'}
-fdi <- read_csv(
-  file = "./data/investment/FDI_useful.csv",
-  col_types = cols(
-    年份 = col_integer(),
-    国家 = col_factor()
-  )
-) %>% select(-地区)
-
-country_name <- fdi[["国家"]] %>% unique()
-
-list_c <- country_name %>%
-  map(~ fdi %>% filter(国家 == .x) %>% .[["年份"]])
-
-fdi_na <- fdi %>% complete(年份, 国家)
-
-matrixplot(fdi_na)
-```
-
-使用linear regression with bootstrap进行缺失数据填补.
-
-```{r message = FALSE, warning = FALSE, results = 'hide'}
+```r
 fdi <- read_csv(
   file = "./data/investment/FDI_useful.csv",
   col_types = cols(
@@ -259,18 +230,15 @@ result <- fdi_filled %>%
 result %>% write_csv("./data/investment/FDI_filled.csv")
 ```
 
-```
-
-
-```
-
 ## Communicate
-
-// Use **echarts**, maybe [**pyecharts**](https://github.com/pyecharts)?
 
 // TODO - H. Fan
 
 # 总结
+
+## 建议
+
+## 展望
 
 # 参考文献
 

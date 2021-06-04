@@ -1,0 +1,115 @@
+---
+title: An R Markdown document converted from "world_health.ipynb"
+output: html_document
+---
+
+```{python}
+import pandas as pd
+import json
+from pyecharts import options as opts
+from pyecharts.charts import Timeline, Map, Page
+from pyecharts.globals import ThemeType
+import numpy as np
+with open("./data/syno_dict.json", 'r', encoding='utf-8') as f:
+    syno_dict = json.load(f)
+page = Page(page_title='预期寿命')
+for gender in ["Male","Female","Both sexes"]:
+    tl = Timeline(init_opts=opts.InitOpts(
+        theme=ThemeType.INFOGRAPHIC,
+        bg_color='white',
+        page_title='预期寿命'
+    ))
+
+    df = pd.read_csv('./data/LE.csv')
+    
+    for year in [2000, 2010, 2015, 2019]:
+        map = (
+            Map()
+            .add("预期寿命",
+                [[row[0], row[-1]]
+                    for _, row in df[(df['Period'] == year) & (df['Dim1'] == gender)].iterrows()],
+                maptype="world",
+                is_map_symbol_show=False,  # 不描点
+                )
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title=f"{year}年预期寿命-"+gender),
+                visualmap_opts=opts.VisualMapOpts(min_=df['First Tooltip'].min(),max_=df['First Tooltip'].max()),
+                toolbox_opts=opts.ToolboxOpts()
+            )
+        )
+        tl.add(map, f"{year}")
+    page.add(tl)
+page.render("./out/life_expectancy.html")
+```
+
+```{python}
+page = Page(page_title='五岁以下死亡率')
+for gender in ["Male","Female","Both sexes"]:
+    tl = Timeline(init_opts=opts.InitOpts(
+        theme=ThemeType.INFOGRAPHIC,
+        bg_color='white',
+        page_title='五岁以下死亡率'
+    ))
+
+    df = pd.read_csv('./data/UFMR_m.csv')
+    for year in [2000, 2010, 2015, 2019]:
+        map = (
+            Map()
+            .add("五岁以下死亡率",
+                [[row[0], row[-1]]
+                    for _, row in df[(df['Period'] == year) & (df['Dim1'] == gender)].iterrows()],
+                maptype="world",
+                is_map_symbol_show=False,  # 不描点
+                )
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title=f"{year}年5岁以下死亡率-"+gender),
+                visualmap_opts=opts.VisualMapOpts(min_=df['First Tooltip'].min(),max_=df['First Tooltip'].max()),
+                toolbox_opts=opts.ToolboxOpts()
+            )
+        )
+        tl.add(map, f"{year}")
+    page.add(tl)
+page.render("./out/UFMR.html")
+```
+
+```{python}
+# it's a test
+import pandas as pd
+import json
+from pyecharts import options as opts
+from pyecharts.charts import Timeline, Map, Page
+from pyecharts.globals import ThemeType
+import numpy as np
+with open("./data/syno_dict.json", 'r', encoding='utf-8') as f:
+    syno_dict = json.load(f)
+df = pd.read_csv('./data/LE.csv')
+
+page = Page(page_title='预期寿命')
+tl = Timeline(init_opts=opts.InitOpts(
+    theme=ThemeType.INFOGRAPHIC,
+    bg_color='white',
+    page_title='预期寿命'
+))
+
+for year in [2000, 2010, 2015, 2019]:
+    map = Map()
+    for gender in ["Male","Female","Both sexes"]:
+        map.add("预期寿命-"+gender,
+            [[row[0], row[-1]]
+                for _, row in df[(df['Period'] == year) & (df['Dim1'] == gender)].iterrows()],
+            maptype="world",
+            is_map_symbol_show=False,  # 不描点
+            )
+    map.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+    map.set_global_opts(
+        title_opts=opts.TitleOpts(title=f"{year}年预期寿命-"+gender),
+        visualmap_opts=opts.VisualMapOpts(min_=df['First Tooltip'].min(),max_=df['First Tooltip'].max()),
+        toolbox_opts=opts.ToolboxOpts()
+    )
+    tl.add(map, f"{year}")
+page.add(tl)
+page.render("./out/life_expectancy.html")
+```
+

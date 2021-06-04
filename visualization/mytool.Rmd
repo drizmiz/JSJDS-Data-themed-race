@@ -1,0 +1,38 @@
+---
+title: An R Markdown document converted from "mytool.ipynb"
+output: html_document
+---
+
+```{python}
+import pandas as pd
+import json
+df = pd.read_csv('./data/UFMR.csv')
+# for index, row in df[df.iloc[:,0]==2003].iterrows():
+#     print(row['国家'],row[3])
+
+# [[row['国家'], row[3]] for _, row in df[df.iloc[:,0]==2003].iterrows()]
+
+# with open("./country_ce.json", 'r', encoding='utf-8') as f:
+#     ce_dict = json.load(f)
+# [[ce_dict[row['国家']], row[3]] for _, row in df[df.iloc[:,0]==2004].iterrows()]
+# df[df.iloc[:, 0] == year].iloc[:,3].max()
+year = 2000
+# df[(df['Period'] == year) & (df['Dim1'] == "Both sexes")]
+df[(df['Period'] == year) & (df['Dim1'] == "Both sexes")]['First Tooltip']
+```
+
+```{python}
+from pyecharts.faker import Faker
+Faker.country
+```
+
+因而从上述的cell我们可以看出，基于已有的数据，我们还需要进行中英文对换。
+
+```{python}
+import json
+with open("./world_country.json", 'r', encoding='utf-8') as f:
+    raw_dict = json.load(f)
+with open("./country_ce.json", 'w', encoding='utf-8') as f:
+    json.dump(dict(zip(raw_dict.values(), raw_dict.keys())), f,ensure_ascii=False)
+```
+

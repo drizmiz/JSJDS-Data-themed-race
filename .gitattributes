@@ -4,11 +4,14 @@
 *.tex -linguist-detectable
 *.rmd linguist-detectable
 *.Rmd linguist-detectable
+
 resources/from_paper/online_supplements/replication_package_final/* linguist-vendored
 R-code/eda-doc/* linguist-vendored
+slides/libs/* linguist-vendored
+
 document/* linguist-documentation
 document/resources/* linguist-documentation
-slides/libs/* linguist-vendored
+slides/* linguist-documentation
+
 visualization/*.Rmd linguist-generated
 slides/slides_files/* linguist-generated
-

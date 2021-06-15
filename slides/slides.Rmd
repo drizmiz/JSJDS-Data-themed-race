@@ -12,7 +12,6 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-    self_contained: true
 ---
 class: center, middle
 
@@ -69,6 +68,8 @@ Assumption: 不存在 $X\rightarrow Z$的线，即 $X\mathrel{\unicode{x2AEB}}Z|
 此图在R语言中，用**ggdag**[@citation_ggdag]生成. 这是有向无环图(Directed acyclic graph, DAG)，其中边代表因果作用[@pearl].
 
 值得注意的是，在该模型中，我们假定一带一路不会以其他方式影响地区的经济发展水平（即不存在$X\rightarrow Z$的线），以避免出现替代指标悖论.
+
+多说一句：Rubin不喜欢
 
 ---
 
@@ -138,22 +139,29 @@ $$\hat{P}_{t}^{N}=\frac{1}{T} \sum_{s=1}^{T}\left(Y_{1 s}^{N}-\frac{1}{J} \sum_{
 
 $$P_{t}^{N}=\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}, \text{where }w \geq 0,\  \sum_{j=2}^{J+1} w_{j}=1.$$
 
-Assumption: $E\left(u_{i} Y_{j t}^{N}\right)=0 \text{, for } 2 \leq j \leq J+1 .$
-
 于是就有估计 $\hat{P}_{t}^{N}=\sum_{j=2}^{J+1} \hat{w}_{j} Y_{j t}^{N}.$
 
-而 $w$的估计 $\hat{w}=\underset{w}{\operatorname{argmin}} \sum_{i=1}^{T}\left(Y_{1 t}^{N}-\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}\right)^{2}, \text{ subject to }w\geq 0,\ \sum_{j=2}^{J+1} w_{j}=1.$
-
---
-
-- $P$值，置信区间的计算 (Chernozhukov et al., 2021)
+而 $w$的估计
+$$\begin{aligned}\hat{w}=&\underset{w}{\operatorname{arg\,min}} \sum_{i=1}^{T}\left(Y_{1 t}^{N}-\sum_{j=2}^{J+1} w_{j} Y_{j t}^{N}\right)^{2}\\ &\text{ subject to }w\geq 0,\ \sum_{j=2}^{J+1} w_{j}=1.\end{aligned}$$
 
 ???
 
  不难发现，DID所要求的条件过高，在现实生活中一般并不成立. 举例来说，实验组可能有其自身特点，导致增长本来就比对照组快. 而所谓合成控制，就是用对照组的数据“合成”出来一个虚拟的实验组，然后应用到事件发生后的情况，得到实验组的反事实数据. 
  
  为了识别合成的权重 $w$，我们需要一些假设，在这里是结构冲击项 $u_{t}$在同一时段内互不相关，即
- 
+
+Assumption: $E\left(u_{i} Y_{j t}^{N}\right)=0 \text{, for } 2 \leq j \leq J+1 .$
+
+---
+
+- $P$值，置信区间的计算 (Chernozhukov et al., 2021)
+
+```{r echo=FALSE, out.width="70%", out.height="70%", fig.align = "center"}
+include_graphics("resources/黑山_ci_sc.svg")
+```
+
+???
+
 此后，我们利用Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法分析P值和置信区间等信息.
 
 ---
@@ -241,13 +249,21 @@ include_graphics("resources/workflow.png")
 对外直接投资指中国国内投资者以现金、实物、无形资产等方式在国外及港澳台地区设立、购买国（境）外企业，并以控制该企业的经营管理权为核心的经济活动. 数据统计来源为中华人民共和国商务部. 该数据可反映中国对外投资. 
 我们认为，该指标反应了一国最基础的医疗水平状况. 相比预期寿命，该指标更好地将研究标的限制在了基础卫生条件，如洁净水源、疫苗接种、家庭卫生条件等. 而对于发展中国家，基础医疗状况和卫生水平的提高，才能最贴切地带来经济发展的动力. 故在预期寿命之外，我们还专门将“5岁以下儿童死亡率”作为研究指标. 
 
-我们认为，相比5岁以下儿童死亡率，该指标更准确地反映了一国在生育保障上的医疗和健康水平. 
+我们认为，相比5岁以下儿童死亡率，该指标更准确地反映了一国在生育保障上的医疗和健康水平.
+
+---
+
+### 画个图
+
+```{r echo=FALSE, out.width="90%", out.height="90%", fig.align = "center"}
+include_graphics("resources/蒙古_data_raw.svg")
+```
 
 ---
 
 ## 数据清洗
 
-- 什么数据结构才算是整理好？
+- 什么样子的数据结构才算是整理好？
 
 --
 
@@ -255,7 +271,7 @@ include_graphics("resources/workflow.png")
 
 --
 
-- 利用**tidyverse**，进行数据清洗. 其部分步骤如下页所示.
+- 利用**tidyverse**，结合**正则表达式**，进行数据清洗. 其部分步骤如下页所示.
 
 
 ???
@@ -293,6 +309,10 @@ df <- fliped_df %>%
 
 数据建模和分析是传统上受重视的技术. 其主要内容[已经](#ana)详述，这里不再赘述.
 
+- 本项目评估了：对测试进行安慰剂检验 (placebo test) 的情况（`sens.csv`），测试的P值（`p.noeff.csv`），结果的置信区间（`ci.csv`）
+
+- 并以`pdf`文件，绘制出了按国家分类的置信区间的情况
+
 ???
 
 对各个国家分别进行的分析结果存储于本项目`results`文件夹下的`results_IMR`（婴儿死亡率数据）和`results_invest`（投资数据）文件夹中. 其中，`sens.csv`描述了对测试进行安慰剂检验(placebo test)的情况，`p.noeff.csv`描述了测试的P值，`ci.csv`描述了结果的置信区间，`pdf`文件绘制出了按国家分类的置信区间的情况.
@@ -301,11 +321,9 @@ df <- fliped_df %>%
 
 ## 数据可视化
 
-本节说明项目中所用到的可视化相关工具、组件、流程. 
-
 ### 可视化工具
 
-项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于Apache Echarts[@LI2018136]的Pyecharts. 
+项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于Apache Echarts的Pyecharts.
 
 我们主要做了如下几个可视化工作：
 
@@ -313,13 +331,15 @@ df <- fliped_df %>%
 
 - 将世界健康数据集中预期寿命和5岁以下死亡率分性别表示在图中
 
-我们从图中可以定性地看出中国外企对于一带一路沿线国家的投入，以及相应国家的经济水平、生活水平的优化. 
+我们从图中可以定性地看出中国外企对于一带一路沿线国家的投入，以及相应国家的经济水平、生活水平的优化.
+
+???
+
+本节说明项目中所用到的可视化相关工具、组件、流程.
 
 ---
 
 ### 文件结构
-
-可视化相关的脚本以及输出结果全部储存在`./visualization`中. 
 
 ```
 visualization
@@ -345,6 +365,8 @@ visualization
 ```
 
 ---
+
+可视化相关的脚本以及输出结果全部储存在`./visualization`中.
 
 其中`./visualization/data/`是可视化所用到的数据，不仅包括我们绘图所需的数据，包括对外直接投资`FDI*.csv`、健康相关数据`LE*.csv`和`UFMR*.csv`等，还包括中英对照表`country_ce.json`、以及国家名的同义对照表`syno_dict.json`等工具数据. 
 
@@ -411,6 +433,13 @@ tl.render("./out/vis.html") # 生成临时文件
 ```
 
 ---
+
+### 可交互图形 by ECharts
+
+<iframe width="900" height="500" src="resources/外商直接投资情况-filled.html" frameborder="0" allowfullscreen></iframe>
+
+
+---
 class: center, middle
 # 总结
 
@@ -428,7 +457,7 @@ ci_csv %>% filter(`min(ci.sc)`>0) %>% group_by(国家) %>% nest() %>% .[["国家
 ci_csv %>% .[["median(ci.sc)"]] %>% mean()
 ```
 
-- 婴儿死亡率对数 $-0.04$！
+- 6年间，婴儿死亡率对数 $-0.04$（均值 $-0.18$）
 
 ???
 
@@ -444,7 +473,7 @@ cii_csv %>% filter(`min(ci.sc)`>0) %>% group_by(国家) %>% nest() %>% .[["国�
 cii_csv %>% .[["median(ci.sc)"]] %>% mean()
 ```
 
-- 投资额对数 $-0.40$！
+- 6年间，投资额对数 $-0.40$
 
 --
 
@@ -458,18 +487,15 @@ cii_csv %>% .[["median(ci.sc)"]] %>% mean()
 
 ---
 class: center, middle
-
-## 分析结果：
-
-### 一带一路有效促进了沿线国家健康水平的提升.
-
----
-class: center, middle
 ## 不足和展望
 
 ???
 
 我们的报告最显著的不足之处是将不同国家的结论组合的方式显得过于随意，仅仅是计算每个国家的效应然后求平均，没有考虑到国家和国家的权重问题. 类似地，在计算投资额时，可以考虑除去国家的经济总量，以反映中国投资占比占该国家GDP的比例. 进一步地，一组国家总效应的置信区间并不必然是分别的效应的置信区间的函数. 然而，进一步研究这个问题需要更多的数学细节，并超过了本项目的范围.
+
+multiple testing
+
+填补缺失数据，单独估计
 
 ---
 class: center, middle

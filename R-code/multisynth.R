@@ -7,6 +7,7 @@ if(!require(augsynth)) {
 }
 
 library(tidyverse)
+library(showtext)
 
 IMR_sc_data <- read_csv("../data/world_health/tidy/iMR_filtered.csv") %>% as.data.frame()
 
@@ -15,7 +16,9 @@ country_list <- read_lines("../data/obor_list.txt")
 IMR_sc_data <- IMR_sc_data %>%
   mutate(OBOR = (国家 %in% country_list) & (年份 >= 2013))
 
-ppool_syn <- multisynth(lg ~ OBOR, unit = 国家, time = 年份, data = IMR_sc_data)
+ppool_syn <- multisynth(
+  lg ~ OBOR, unit = 国家, time = 年份, data = IMR_sc_data
+)
 
 ppool_syn %>% summary() -> ppsum
 

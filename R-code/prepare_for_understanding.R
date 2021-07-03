@@ -12,7 +12,7 @@ dat1 <- read_csv("../data/investment/FDI_filled.csv")
 dat1 <- dat1 %>%
   mutate(lg = robust_log(对外直接投资), .keep = "unused") %>%
   select(-地区) %>%
-  filter(国家 != "马尔代夫", 国家 != "以色列")%>%
+  filter(国家 != "马尔代夫", 国家 != "以色列") %>%
   pivot_wider(names_from = "国家", values_from = "lg") %>%
   arrange(年份) %>%
   select(-年份)
@@ -26,7 +26,11 @@ dat2 <- read_csv("../data/world_health/tidy/iMR_tidy_zh.csv")
 dat2 <- dat2 %>%
   mutate(lg = robust_log(infantMortalityRate), .keep = "unused") %>%
   select(-country) %>%
-  filter(国家 %>% is.na() %>% `!`, 年份 >= 2003, 年份 <= 2019, 国家 != "苏丹") %>%
+  filter(国家 %>% is.na() %>% `!`, 年份 >= 2003, 年份 <= 2019, 国家 != "苏丹")
+
+dat2 %>% write_csv("../data/world_health/tidy/iMR_filtered.csv")
+
+dat2 <- dat2 %>%
   pivot_wider(names_from = "国家", values_from = "lg") %>%
   arrange(年份) %>%
   select(-年份)

@@ -3,19 +3,6 @@
 
 library(tidyverse)
 
-# Time periods
-
-T0 <- 2003
-Tact <- 2013
-Tpre <- Tact - 1
-Tend <- 2019
-
-Tact_from_0 <- Tact - T0    # 10
-T01go <- Tend - T0 + 1  # 17
-T1go <- T01go - Tact_from_0  # 7
-
-time <- seq(T0, Tend, 1)
-
 # Parameters
 
 q_norm <- 1 # L_1 norm
@@ -32,6 +19,21 @@ IMR_str <- "Log Infant Mortality Rate"
 data <- IMR_data
 legend_str <- IMR_str
 directory <- "../results/results_IMR/"
+
+# Time periods
+
+T0 <- 2003
+Tact <- 2013
+Tpre <- Tact - 1
+Tend <- 2019
+
+Tact_from_0 <- Tact - T0    # 10
+T01go <- Tend - T0 + 1  # 17
+T1go <- T01go - Tact_from_0  # 7
+
+time <- seq(T0, Tend, 1)
+
+# OBOR list generating
 
 country_list <- read_lines("../data/obor_list.txt")
 

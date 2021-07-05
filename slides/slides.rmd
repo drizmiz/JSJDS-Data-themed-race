@@ -446,8 +446,13 @@ tl.render("./out/vis.html") # 生成临时文件
 
 ### 可交互图形 by ECharts
 
-<iframe width="900" height="500" src="resources/外商直接投资情况-filled.html" frameborder="0" allowfullscreen></iframe>
+<iframe width="900" height="500" src="resources/html/外商直接投资情况-filled.html" frameborder="0" allowfullscreen></iframe>
 
+---
+
+### 可交互图形 by ECharts
+
+<iframe width="900" height="500" src="resources/html/世界健康-ci.html" frameborder="0" allowfullscreen></iframe>
 
 ---
 class: center, middle

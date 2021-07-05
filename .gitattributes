@@ -8,5 +8,6 @@ slides/libs/** linguist-vendored
 
 visualization/*.Rmd linguist-generated
 document/resources/** linguist-generated
+slides/resources/** linguist-generated
 slides/slides_files/* linguist-generated
 

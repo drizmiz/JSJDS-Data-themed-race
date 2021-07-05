@@ -6,8 +6,6 @@
 resources/** linguist-vendored
 slides/libs/** linguist-vendored
 
-slides/* linguist-documentation
-
 visualization/*.Rmd linguist-generated
 document/resources/** linguist-generated
 slides/slides_files/* linguist-generated

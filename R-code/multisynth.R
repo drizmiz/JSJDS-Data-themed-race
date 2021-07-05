@@ -37,3 +37,9 @@ ppsum <- perform_multisynth(file = "../data/world_health/tidy/5MR_filtered.csv")
 pdf("../results/5MR/pooled/pooled_average.pdf")
 ppsum %>% plot(levels = "Average")
 graphics.off()
+
+ppsum <- perform_multisynth(file = "../data/investment/FDI_filtered.csv")
+
+pdf("../results/investment/pooled/pooled_average.pdf")
+ppsum %>% plot(levels = "Average")
+graphics.off()

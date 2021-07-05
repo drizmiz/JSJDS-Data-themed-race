@@ -106,7 +106,7 @@ library(VIM)
 
 除了估计分别的效应之外，我们注意到一组国家总效应的置信区间并不必然是分别的效应的置信区间的函数.[@FirpoPossebom] 进一步地，我们应用R包**augsynth**[@citation_augsynth]中的`multisynth`函数进行多国家的效应推断，其结果存储于`results`下各分文件夹的`pooled`文件夹中. 例如，五岁以下儿童死亡率的总效应如[图4](#pool)所示.
 
-![一带一路对五岁以下儿童死亡率的总效应示意图](resources/5MR_pooled.pdf) {#pool .class width=50% height=40%}
+![一带一路对五岁以下儿童死亡率的总效应示意图](resources/5MR_pooled.pdf){#pool .class width=50% height=40%}
 
 ## 数据可视化
 
@@ -141,16 +141,16 @@ read_csv("../results/IMR/ci.csv") %>%
 
 ```{r message=FALSE}
 read_csv("../results/investment/ci.csv") %>%
-        filter(`max(ci.sc)`<0) %>% group_by(国家) %>% nest() %>% .[["国家"]]
+        filter(`min(ci.sc)`>0) %>% group_by(国家) %>% nest() %>% .[["国家"]]
 ```
 
 且平均而言，参与一带一路反而额外降低中国对当地的投资的对数约0.40.
 
-根据常识，投资($Y$)对经济发展水平($Z$)的平均因果作用是正的，而经济发展水平($Z$)对健康水平($W$)的平均因果作用也是正的. 这样，我们建立以下模型：
+根据常识，投资($Y$)对经济发展水平($Z$)的平均因果作用是正的，而经济发展水平($Z$)对健康水平($W$)的平均因果作用也是正的. 我们建立以下模型.
 
-![数据模型示意图](resources/DAG.pdf) {#DAG .class width=60% height=60%}
+![数据模型示意图](resources/DAG.pdf){#dag .class width=60% height=60%}
 
-因此，根据我们的模型，在相同的经济发展水平下，参与一带一路能够相比预期增加沿线国家的国民健康水平，或者狭义来说，降低婴儿死亡率. 从这一方面来看，一带一路对沿线国家经济以外的影响，还有待更深的评估.
+这样，根据我们的模型，在相同的经济发展水平下，参与一带一路能够相比预期增加沿线国家的国民健康水平，或者狭义来说，降低婴儿死亡率. 从这一方面来看，一带一路对沿线国家经济以外的影响，还有待更深的评估.
 
 ## 不足和展望
 
@@ -207,6 +207,10 @@ $$
 $$
 
 我们利用Chernozhukov et al.[@doi:10.1080/01621459.2021.1920957]的方法分析P值和置信区间等信息.
+
+### 有向无环图
+
+本文的有向无环图，在R语言中用**ggdag**[@citation_ggdag]生成. 这是有向无环图(Directed acyclic graph, DAG)，其中边代表因果作用[@pearl]. 注意到其中不存在 $X\rightarrow Z$的线，即 $X\mathrel{\perp\!\!\!\perp}Z|Y$. 这是假定一带一路不会以其他方式影响地区的经济发展水平（即不存在$X\rightarrow Z$的线），以避免出现替代指标悖论.
 
 ## 程序技术
 

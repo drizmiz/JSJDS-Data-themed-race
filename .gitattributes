@@ -3,16 +3,12 @@
 *.css -linguist-detectable
 *.tex -linguist-detectable
 
-*.rmd linguist-detectable
-*.Rmd linguist-detectable
-
 resources/** linguist-vendored
 slides/libs/** linguist-vendored
 
-document/** linguist-documentation
 slides/* linguist-documentation
 
 visualization/*.Rmd linguist-generated
-document/*.log linguist-generated
+document/resources/** linguist-generated
 slides/slides_files/* linguist-generated
 

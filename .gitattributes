@@ -1,17 +1,18 @@
+
 *.html -linguist-detectable
-*.js -linguist-detectable
 *.css -linguist-detectable
 *.tex -linguist-detectable
+
 *.rmd linguist-detectable
 *.Rmd linguist-detectable
 
-resources/from_paper/CI/online_supplements/replication_package_final/* linguist-vendored
-resources/from_paper/PooledSC/suppl_jci-2016-0026supp/* linguist-vendored
-slides/libs/* linguist-vendored
+resources/** linguist-vendored
+slides/libs/** linguist-vendored
 
-document/* linguist-documentation
-document/resources/* linguist-documentation
+document/** linguist-documentation
 slides/* linguist-documentation
 
 visualization/*.Rmd linguist-generated
+document/*.log linguist-generated
 slides/slides_files/* linguist-generated
+

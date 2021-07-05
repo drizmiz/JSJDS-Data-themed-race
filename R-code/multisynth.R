@@ -24,10 +24,6 @@ ppool_syn %>% summary() -> ppsum
 
 showtext_auto()
 
-pdf("../results/pooled/pooled.pdf", width = 13.5, height = 24)
-ppsum %>% plot()
-graphics.off()
-
 pdf("../results/pooled/pooled_average.pdf")
 ppsum %>% plot(levels = "Average")
 graphics.off()

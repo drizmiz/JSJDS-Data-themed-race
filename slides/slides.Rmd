@@ -457,8 +457,8 @@ class: center, middle
 ## 分析结果
 
 ```{r include=FALSE}
-ci_csv <- read_csv("../results/results_IMR/ci.csv")
-cii_csv <- read_csv("../results/results_invest/ci.csv")
+ci_csv <- read_csv("../results/IMR/ci.csv")
+cii_csv <- read_csv("../results/investment/ci.csv")
 ```
 
 ```{r}

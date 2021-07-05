@@ -81,7 +81,7 @@ library(VIM)
 
 ## 数据分析
 
-数据建模和分析是传统上受重视的技术. 以下对各个国家分别进行的分析结果存储于本项目`results`文件夹下的`results_IMR`（婴儿死亡率数据）和`results_invest`（投资数据）文件夹中. 其中，`sens.csv`描述了对测试进行安慰剂检验(placebo test)的情况，`p.noeff.csv`描述了测试的P值，`ci.csv`描述了结果的置信区间，`pdf`文件绘制出了按国家分类的置信区间的情况.
+数据建模和分析是传统上受重视的技术. 以下对各个国家分别进行的分析结果存储于本项目`results`文件夹下的`IMR`（婴儿死亡率数据）、`5MR`（5岁以下儿童死亡率）、`investment`（投资数据）文件夹中. 其中，`sens.csv`描述了对测试进行安慰剂检验(placebo test)的情况，`p.noeff.csv`描述了测试的P值，`ci.csv`描述了结果的置信区间，`pdf`文件绘制出了按国家分类的置信区间的情况.
 
 首先注意到数据集中存在许多缺失数据，如[图2](#missd)[@citation_VIM]所示. 缺失数据的删除或填补需要用到一些技术.
 
@@ -281,8 +281,9 @@ xfun::session_info(
 │   ├── from_paper
 │   └── topic
 ├── results             数据分析结果
-│   ├── results_IMR
-│   └── results_invest
+│   ├── 5MR
+│   ├── IMR
+│   └── investment
 └── visualization       数据可视化
     ├── data
     ├── out

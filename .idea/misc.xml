@@ -46,6 +46,14 @@
         <entry key="file://$PROJECT_DIR$/slides/slides.rmd">
           <value>
             <RMarkdownRenderProfile>
+              <option name="lastOutput" value="$PROJECT_DIR$/slides/slides.html" />
+              <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/slides" />
+            </RMarkdownRenderProfile>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/slides/slides2.rmd">
+          <value>
+            <RMarkdownRenderProfile>
               <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/slides" />
             </RMarkdownRenderProfile>
           </value>

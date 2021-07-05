@@ -12,6 +12,22 @@
             </RMarkdownRenderProfile>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/document/document2.rmd">
+          <value>
+            <RMarkdownRenderProfile>
+              <option name="lastOutput" value="$PROJECT_DIR$/document/document2.pdf" />
+              <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/document" />
+            </RMarkdownRenderProfile>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/document/gen_res.rmd">
+          <value>
+            <RMarkdownRenderProfile>
+              <option name="lastOutput" value="$PROJECT_DIR$/document/gen_res.pdf" />
+              <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/document" />
+            </RMarkdownRenderProfile>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/slides/slides.Rmd">
           <value>
             <RMarkdownRenderProfile>

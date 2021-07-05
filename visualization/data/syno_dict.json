@@ -1,3 +1,19 @@
 {
-    
-}
+    "United States of America":"United States",
+    "Russian Federation": "Russia",
+    "Bolivia (Plurinational State of)": "Bolivia",
+    "Venezuela (Bolivarian Republic of)":"Venezuela",
+    "Sudan (until 2011)":"Sudan",
+    "South Sudan":"S. Sudan",
+    "Central African Republic":"Central African Rep.",
+    "Dominican Republic":"Dominican Rep.",
+    "United Kingdom of Great Britain and Northern Ireland":"United Kingdom",
+    "Lao People's Democratic Republic": "Lao PDR",
+    "Viet Nam":"Vietnam",
+    "Democratic Republic of the Congo":"Dem. Rep. Congo",
+    "Iran (Islamic Republic of)":"Iran",
+    "United Republic of Tanzania":"Tanzania",
+    "Democratic People's Republic of Korea":"Dem. Rep. Korea",
+    "Republic of Korea":"Korea",
+    "Côte d’Ivoire":"Côte d'Ivoire"
+} 

@@ -29,7 +29,7 @@ dag <- dagify(
 
 showtext_auto()
 
-pdf("./t/DAG.pdf", width = 9, height = 4)
+pdf("./new_res/DAG.pdf", width = 9, height = 4)
 gp1 <- ggplot(dag, aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_point(colour = 'Gray') +
   geom_dag_edges(
@@ -60,6 +60,6 @@ list_c <- country_name %>%
   map(~ fdi %>% filter(国家 == .x) %>% .[["年份"]])
 fdi_na <- fdi %>% complete(年份, 国家)
 
-pdf("./t/Missing data.pdf", width = 9, height = 4)
+pdf("./new_res/Missing data.pdf", width = 9, height = 4)
 matrixplot(fdi_na)
 graphics.off()

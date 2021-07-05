@@ -53,7 +53,7 @@ library(VIM)
 
 ## The Workflow
 
-根据 _R for Data Science_[@Wickham2017R]，数据分析的一般流程如[图3](#wf)所示. 本项目也符合这种模式.
+根据 _R for Data Science_[@Wickham2017R]，数据分析的一般流程如[图1](#wf)所示. 本项目也符合这种模式.
 
 ![The Data Science Workflow[^1]](resources/workflow.png){#wf}
 
@@ -77,31 +77,7 @@ library(VIM)
 
 ## 数据清洗
 
-虽然不为人所重视，数据清洗往往是数据分析工作中耗时最久的部分.[@DS50] 不仅如此，数据清洗的目标也往往不被人熟知. 什么数据结构才算是整理好？幸运的是，Hadley Wickham的文章[@tidy-data]向我们提供了一种通俗易懂的解释：每行应该代表一个观察(observation)，每列应该代表一个变量(variable). 根据此种原则，并利用其为此目的开发的R包**tidyverse**[@tdv]，进行数据清洗. 其部分步骤如下所示.
-
-```r
-process <- function(raw_df) {
-  simplified_df <- raw_df %>%
-    filter(X1 %>% str_detect("^\\d")) %>%
-    rename(时间 = X1)
-
-  fliped_df <- simplified_df %>%
-    pivot_longer(c(-时间), names_to = "observation", values_to = "val")
-
-  stdize <- function(str) {
-    str %>%
-      str_replace(pattern = "(.*):(总计|一带一路)", replacement = "\\1/\\2/\\2") %>%
-      str_replace(pattern = "::", replacement = ":") %>%
-      str_replace(pattern = "(.*):(.*洲):*(.*)", replacement = "\\1/\\2/\\3")
-  }
-
-  sep_df <- fliped_df %>%
-    mutate(observation = observation %>% stdize()) %>%
-    separate(col = "observation", into = c("type", "地区", "国家"), sep = "/")
-
-  df <- sep_df %>% spread(key = "type", value = "val")
-}
-```
+虽然不为人所重视，数据清洗往往是数据分析工作中耗时最久的部分.[@DS50] 不仅如此，数据清洗的目标也往往不被人熟知. 什么数据结构才算是整理好？幸运的是，Hadley Wickham的文章[@tidy-data]向我们提供了一种通俗易懂的解释：每行应该代表一个观察(observation)，每列应该代表一个变量(variable). 根据此种原则，并利用其为此目的开发的R包**tidyverse**[@tdv]，进行数据清洗. 
 
 ## 数据分析
 
@@ -122,7 +98,15 @@ process <- function(raw_df) {
 
 ### 反事实推断
 
-分析一带一路的影响，就是要分析某一事件发生后，某一值的变化情况，这是经典的政策影响问题. 该值自身也存在着模型外因素导致的变化趋势，所以我们必须利用某些技术来去除这些因素的影响. 于是，我们运用双重差分和合成控制两种技术. 参见[方法$\star$](#method).
+分析一带一路的影响，就是要分析某一事件发生后，某一值的变化情况，这是经典的政策影响问题. 而该值自身必然存在着模型外因素导致的变化趋势，所以我们需要利用某些技术来去除这些因素的影响. 于是，我们运用双重差分和合成控制两种技术. 参见[方法$\star$](#method). 例如，黑山的新生儿死亡率随时间的反事实变化绘图如下.
+
+![黑山](resources/黑山_ci_sc.pdf){#hs .class width=50% height=50%}
+
+### 总体反事实推断
+
+除了估计分别的效应之外，我们注意到一组国家总效应的置信区间并不必然是分别的效应的置信区间的函数.[@FirpoPossebom] 进一步地，我们应用R包**augsynth**[@citation_augsynth]中的`multisynth`函数进行多国家的效应推断，其结果存储于`results`下各分文件夹的`pooled`文件夹中. 例如，五岁以下儿童死亡率的总效应如[图4](#pool)所示.
+
+![一带一路对五岁以下儿童死亡率的总效应示意图](resources/5MR_pooled.pdf) {#pool .class width=50% height=40%}
 
 ## 数据可视化
 
@@ -132,7 +116,7 @@ process <- function(raw_df) {
 
 项目将世界经济及其相关的数据，展示在世界地图上，考虑Python语言相对于JavaScript具有更好的数据处理能力，我们使用基于Apache Echarts[@LI2018136]的Pyecharts. 
 
-我们主要做了如下几个可视化工作：
+我们：
 
 - 将2003到2019年的中国对外直接投资总额表示在地图上
 
@@ -140,74 +124,37 @@ process <- function(raw_df) {
 
 我们从图中可以定性地看出中国外企对于一带一路沿线国家的投入，以及相应国家的经济水平、生活水平的优化.
 
-### 流程
-
-以FDI（对外直接投资）为例，我们讲述项目中使用的pyecharts可视化方法如下.
-
-```python
-import pandas as pd                                   # 数据分析组件
-import json                                           # 用于导入工具json
-from pyecharts import options as opts                 # 用于调整pyecharts图的属性
-from pyecharts.charts import Timeline, Map            # 选取pyecharts基本类型
-from pyecharts.globals import ThemeType               # 选取pyecharts主题
-import numpy as np                                    # python数值计算工具
-tl = Timeline(init_opts=opts.InitOpts(
-    theme=ThemeType.INFOGRAPHIC,
-    bg_color='white',
-    page_title='外商直接投资情况'
-))                                                    # 生成timeline图结构
-with open("./data/country_ce.json", 'r', encoding='utf-8') as f:
-    ce_dict = json.load(f)                            # 导入国家名称中英文对照表
-
-df = pd.read_csv('./FDI_filled_m.csv')                # 生成dataframe
-df.iloc[:, 3] = df.iloc[:, 3].apply(np.log1p)         # 将数值列对数化
-for year in range(2003, 2019+1):                      # 循环添加不同年份的数据到timeline图中
-    map = (
-        Map()                                         # 生成一个年份的地图
-        .add(df.columns.tolist()[-1]+"（对数值，原单位：百万美元）",# 设定图层名
-             [[ce_dict[row['国家']], row[3]]          # 读入数据，使用dataframe方法进行筛选
-                 for _, row in df[df.iloc[:, 0] == year].iterrows()],
-             maptype="world",                         # 设定为世界地图
-             is_map_symbol_show=False,                # 不描点
-             )
-        .set_series_opts(label_opts=opts.LabelOpts(is_show=False)) # 在地图中不显示对应国家的数值
-        .set_global_opts(
-            title_opts=opts.TitleOpts(title=f"{year}年外商直接投资情况"), #设定当前页的标题
-            visualmap_opts=opts.VisualMapOpts(
-                max_=df[df.iloc[:, 0] == year].iloc[:, 3].max()),    # 重设图例范围
-            toolbox_opts=opts.ToolboxOpts(),                         # 打开工具箱组件，便于后续使用鼠标调节
-
-        )
-    )
-    tl.add(map, f"{year}年") # 将当前图层加入timeline结构中
-tl.render("./out/vis.html") # 生成临时文件
-```
+此外，我们将两种方法生成的置信区间的均值绘图，分别按照时间组织为Timeline排列在Page中，例如[世界健康-ci.html](../visualization/out/世界健康-ci.html). 粗略地我们可以看到，一些特定的年份中，自我国西部延伸至西亚，较高的分层设色部分都分布在一带一路沿线。
 
 # 总结
 
 ## 分析结果
 
-```{r}
+在一带一路的参与国家中，婴儿死亡率相比预期降低（$P<0.10$）的国家共有4个，如下所示.
+
+```{r message=FALSE}
 read_csv("../results/IMR/ci.csv") %>%
         filter(`max(ci.sc)`<0) %>% group_by(国家) %>% nest() %>% .[["国家"]]
 ```
 
-可见，在一带一路的参与国家中，婴儿死亡率相比预期降低（$P<0.10$）的国家共有4个，如下所示.
+与预期不符，在一带一路的参与国家中，中国对当地的投资相比预期显著降低（$P<0.10$）的国家仅有1个，如下所示.
 
-```{r}
+```{r message=FALSE}
 read_csv("../results/investment/ci.csv") %>%
         filter(`max(ci.sc)`<0) %>% group_by(国家) %>% nest() %>% .[["国家"]]
 ```
 
-与预期不符的是，在一带一路的参与国家中，中国对当地的投资相比预期降低（$P<0.10$）的国家共有8个. 中国对当地的投资相比预期升高（$P<0.10$）的国家共有1个. 平均而言，参与一带一路反而额外降低中国对当地的投资的对数约0.40.
+且平均而言，参与一带一路反而额外降低中国对当地的投资的对数约0.40.
 
-根据常识，投资($Y$)对经济发展水平($Z$)的平均因果作用是正的，而经济发展水平($Z$)对健康水平($W$)的平均因果作用也是正的. 因此，根据我们的模型，在相同的经济发展水平下，参与一带一路能够相比预期增加沿线国家的国民健康水平，或者狭义来说，降低婴儿死亡率. 从这一方面来看，一带一路对沿线国家经济以外的影响，还有待更深的评估.
+根据常识，投资($Y$)对经济发展水平($Z$)的平均因果作用是正的，而经济发展水平($Z$)对健康水平($W$)的平均因果作用也是正的. 这样，我们建立以下模型：
 
-## 总结和展望
+![数据模型示意图](resources/DAG.pdf) {#DAG .class width=60% height=60%}
 
-我们的报告最显著的不足之处是将不同国家的结论组合的方式显得过于随意，仅仅是计算每个国家的效应然后求平均，没有考虑到国家和国家的权重问题. 类似地，在计算投资额时，可以考虑除去国家的经济总量，以反映中国投资占比占该国家GDP的比例. 进一步地，一组国家总效应的置信区间并不必然是分别的效应的置信区间的函数.[@FirpoPossebom] 然而，进一步研究这个问题需要更多的数学细节，~~并超过了本项目的范围~~.[@citation_augsynth]
+因此，根据我们的模型，在相同的经济发展水平下，参与一带一路能够相比预期增加沿线国家的国民健康水平，或者狭义来说，降低婴儿死亡率. 从这一方面来看，一带一路对沿线国家经济以外的影响，还有待更深的评估.
 
-![总效应示意图](resources/IMR_pooled.pdf){#pool .class width=60% height=60%}
+## 不足和展望
+
+我们的报告最显著的不足之处是将不同国家的结论组合的方式显得过于随意，仅仅是计算每个国家的效应然后求平均，没有考虑到国家和国家的权重问题. 类似地，在计算投资额时，可以考虑除去国家的经济总量，以反映中国投资占比占该国家GDP的比例.
 
 # 方法$\star$ {#method}
 
@@ -374,6 +321,50 @@ visualization
 `world_health.ipynb`为世界卫生健康相关数据可视化脚本，前两个cell分别用于绘制世界国家预期寿命和5岁以下死亡率，第三个cell尝试将不同的性别绘制在同一张图中，但是由于timeline和gender两个尺度只能分开调整，所以在时间纵向对比时并不方便，我们将结果绘制为三个图构成的Page Echarts图.
 
 `./visualization/out/`是可视化的文件，成品文件名已经更改，相对清楚. 注意其中`外商直接投资情况-filled.html`为利用算法填充部分缺失数据之后的FDI图像.
+
+
+### 可视化
+
+以FDI（对外直接投资）为例，我们讲述项目中使用的pyecharts可视化方法如下.
+
+```python
+import pandas as pd                                   # 数据分析组件
+import json                                           # 用于导入工具json
+from pyecharts import options as opts                 # 用于调整pyecharts图的属性
+from pyecharts.charts import Timeline, Map            # 选取pyecharts基本类型
+from pyecharts.globals import ThemeType               # 选取pyecharts主题
+import numpy as np                                    # python数值计算工具
+tl = Timeline(init_opts=opts.InitOpts(
+    theme=ThemeType.INFOGRAPHIC,
+    bg_color='white',
+    page_title='外商直接投资情况'
+))                                                    # 生成timeline图结构
+with open("./data/country_ce.json", 'r', encoding='utf-8') as f:
+    ce_dict = json.load(f)                            # 导入国家名称中英文对照表
+
+df = pd.read_csv('./FDI_filled_m.csv')                # 生成dataframe
+df.iloc[:, 3] = df.iloc[:, 3].apply(np.log1p)         # 将数值列对数化
+for year in range(2003, 2019+1):                      # 循环添加不同年份的数据到timeline图中
+    map = (
+        Map()                                         # 生成一个年份的地图
+        .add(df.columns.tolist()[-1]+"（对数值，原单位：百万美元）",# 设定图层名
+             [[ce_dict[row['国家']], row[3]]          # 读入数据，使用dataframe方法进行筛选
+                 for _, row in df[df.iloc[:, 0] == year].iterrows()],
+             maptype="world",                         # 设定为世界地图
+             is_map_symbol_show=False,                # 不描点
+             )
+        .set_series_opts(label_opts=opts.LabelOpts(is_show=False)) # 在地图中不显示对应国家的数值
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title=f"{year}年外商直接投资情况"), #设定当前页的标题
+            visualmap_opts=opts.VisualMapOpts(
+                max_=df[df.iloc[:, 0] == year].iloc[:, 3].max()),    # 重设图例范围
+            toolbox_opts=opts.ToolboxOpts(),                         # 打开工具箱组件，便于后续使用鼠标调节
+
+        )
+    )
+    tl.add(map, f"{year}年") # 将当前图层加入timeline结构中
+tl.render("./out/vis.html") # 生成临时文件
+```
 
 # 参考文献 {-}
 
